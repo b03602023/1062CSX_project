@@ -7,5 +7,6 @@
 * Finish hw 1
 
 ## week 2
+* Learn markdown to edit the README.md 
 
 
