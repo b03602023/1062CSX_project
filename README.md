@@ -1,7 +1,7 @@
 # 1062CSX_project
-�j�a�n~�ڪ��W�r�O�H����
-�Ʊ�i�H�z�L��Ƭ�ǵ{���]�p��F�Ѩϥ�R�y���M��Ƥ��R����k!
+大家好~我的名字是沈祐珍
+希望可以透過資料科學程式設計更了解使用R語言和資料分析的方法!
 
 ## week 1
-�ǲߨϥ�Git
 
+  ● 學習使用Git
