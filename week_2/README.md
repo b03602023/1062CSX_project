@@ -3,9 +3,9 @@
 ### week_2
 
 - learning
-        - 爬蟲概念
-        - 網頁結構(關於HTML、CSS、JS、CXML)
-        - RMarkdown
+    - 爬蟲概念
+    - 網頁結構(關於HTML、CSS、JS、CXML)
+    - RMarkdown
 - practice
-        - 用R來爬蟲
+    - 用R來爬蟲
 
