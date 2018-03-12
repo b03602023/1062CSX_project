@@ -8,4 +8,7 @@
     - RMarkdown
 - practice
     - 用R來爬蟲
+- result
+    - 將成果運用RMarkdown以HTML展示https://b03602023.github.io/1062CSX_project/week_2/task_2/Rcrawler_PChome.html
+
 
