@@ -3,6 +3,7 @@
 ### week_2
 
 - learning
+    - R basic II
     - 爬蟲概念
     - 網頁結構(關於HTML、CSS、JS、CXML)
     - RMarkdown
