@@ -1,0 +1,31 @@
+---
+title: "IMDb_Rcrawler"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+
+```{r}
+# in class practice
+library(rvest)
+html=read_html("https://www.imdb.com/chart/boxoffice?ref_=nv_ch_cht_1")
+title = html_nodes(x = html, css = ".titleColumn a")
+title = html_text(x = title)
+gross = html_nodes(x = html, css = ".secondaryInfo")
+gross = html_text(x = gross)
+htitle = html_nodes(x = html, css = ".titleColumn a")
+ref = html_attr(htitle,"href")
+data=data.frame(title = title, gross = gross, link = ref)
+
+```
+
+### Show results
+```{r}
+library(knitr)
+kable(data)
+```
