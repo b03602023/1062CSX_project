@@ -3,7 +3,7 @@
 
 ### function SayHello #####################################################
 SayHello <- function (name) {
-  print(________________)
+  print(name)
 }
 
 SayHello("Pecu") # Output > "Hello, Pecu" 
