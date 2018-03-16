@@ -8,6 +8,10 @@ gross = html_text(x = gross)
 htitle = html_nodes(x = html, css = ".titleColumn a")
 ref = html_attr(htitle,"href")
 data=data.frame(title = title, gross = gross, link = ref)
+# ggplot2 呈現圖表
+library(ggplot2)
+g = ggplot(data)
+g + geom_bar(stat="identity")
 
 
 #---------------------------------------------------------------
