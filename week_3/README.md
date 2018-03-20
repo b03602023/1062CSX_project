@@ -25,3 +25,5 @@
 >[政府資料開放平台](https://data.gov.tw/)
 >
 >[R的JSON格式資料處理套件](https://blog.gtwang.org/r/jsonlite-json-format-parser-generator-tutorial/2/)
+>
+>[成果]:https://b03602023.github.io/1062CSX_project/week_3/ggplot2practice.html
