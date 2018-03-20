@@ -14,12 +14,14 @@
 
 [網頁視覺化](https://github.com/d3/d3/wiki/Gallery)
 
-[R內建繪圖函數](https://pecu.gitbooks.io/r_/content/week3/3-plot-with-ggplot2.html)較無法客製化
+[R內建繪圖函數](https://pecu.gitbooks.io/r_/content/week3/3-plot-with-ggplot2.html): 較無法客製化
 
 [ggplot2](https://pecu.gitbooks.io/r_/content/week3/3-plot-with-ggplot2-and-plotly.html)
 
 [進階軟體開發專題](https://csx.aca.ntu.edu.tw/course/2031b0/index.htm)
 
-[政府資料開放平台](https://data.gov.tw/)
+`回家練習`
 
-[R的JSON格式資料處理套件](https://blog.gtwang.org/r/jsonlite-json-format-parser-generator-tutorial/2/)
+>[政府資料開放平台](https://data.gov.tw/)
+>
+>[R的JSON格式資料處理套件](https://blog.gtwang.org/r/jsonlite-json-format-parser-generator-tutorial/2/)
