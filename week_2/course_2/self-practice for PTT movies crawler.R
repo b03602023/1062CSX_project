@@ -1,4 +1,35 @@
 rm(list=ls(all.names=TRUE))
+
+### practice_3
+### Crawler Example
+
+### Crawler_Example with rvest    #####################################################################
+# 參考：https://blog.gtwang.org/r/rvest-web-scraping-with-r/
+rm(list = ls())
+library(rvest)
+
+# Set url
+url <- "https://www.ptt.cc/bbs/movie/index.html"
+# Get response
+res <- read_html(url)
+
+# Parse the content and extract the titles
+raw.titles <- res %>% html_nodes("div.title")
+
+# Extract link
+movie.article.link <- raw.titles %>% html_node("a") %>% html_attr('href')
+
+# Extract article
+movie.article.title <- raw.titles %>% html_node("a") %>% html_text() 
+
+# Create dataframe
+movie.df <- data.frame(movie.article.title, movie.article.link)
+
+# Set df's colnames
+colnames(movie.df) <- c("title", "link")
+View(movie.df)
+
+#------------------------------------------------------
 library(XML)
 library(RCurl)
 library(httr)
