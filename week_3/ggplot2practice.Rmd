@@ -101,5 +101,3 @@ twmap0
 
 
 `資料來源`：政府資料開放平台--文化部收錄獨立特色書店的資料
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
