@@ -1,9 +1,9 @@
 # NOTE for [Using the Graph API](https://developers.facebook.com/docs/graph-api/using-graph-api?locale=zh_HK)
-`
+```
 GET https://graph.facebook.com/v2.11
   /820882001277849
     ?fields=about,fan_count,website
-`
+```
 >  - Nodes
 `/820882001277849`: node
 >> A node is an individual object with a unique ID.
@@ -19,11 +19,11 @@ GET https://graph.facebook.com/v2.11
 >
 >For example, performing a GET request on the Coca-Cola Page's /feed edge may return hundreds of Posts. You can limit the number of Posts returned for each page of results by doing this:
 >
->>`
+>>```
 GET https://graph.facebook.com/v2.11
   /820882001277849
     ?fields=feed.limit(3)
-`
+```
 >
 >Only three objects appear in this page of paginated results, but the response included a next field and URL which you can use to fetch the next page.
 
@@ -33,12 +33,12 @@ GET https://graph.facebook.com/v2.11
 
 >Most edges allow you to publish objects to a collection on a node. You can do this by using a POST request on the node's edge. For example, you can publish a Comment on a Photo by using the Photo node's /comments edge:
 >
->`
+>```json
 POST https://graph.facebook.com
   /1809938745705498
     /comments
       ?message=Awesome!
-`
+```
 
 - Traversing Paged Results
 
@@ -50,7 +50,7 @@ POST https://graph.facebook.com
 >
 >When reading an edge that supports cursor pagination, you will see the following JSON response:
 >
->`
+>```
 {
   "data": [
      ... Endpoint data is here
@@ -64,7 +64,7 @@ POST https://graph.facebook.com
     "next": "https://graph.facebook.com/me/albums?limit=25&after=MTAxNTExOTQ1MjAwNzI5NDE="
   }
 }
-`
+```
 >
 >
 >    - before : This is the cursor that points to the start of the page of data that has been returned.
