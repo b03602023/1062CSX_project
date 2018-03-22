@@ -43,3 +43,32 @@ POST https://graph.facebook.com
 - Traversing Paged Results
 
 >When you make an API request to a node or edge, you usually don't receive all of the results of that request in a single response. This is because some responses could contain thousands of objects so most responses are paginated (分頁) by default.
+
+- Cursor-based Pagination
+
+>**Cursor-based** pagination is the most efficient method of paging and should always be used where possible. A cursor refers to a random string of characters which marks a specific item in a list of data. Unless this item is deleted, the cursor will always point to the same part of the list, but will be invalidated if an item is removed. Therefore, your app shouldn't store cursors and assume that they will be valid in the future.
+>
+>When reading an edge that supports cursor pagination, you will see the following JSON response:
+>
+>`
+{
+  "data": [
+     ... Endpoint data is here
+  ],
+  "paging": {
+    "cursors": {
+      "after": "MTAxNTExOTQ1MjAwNzI5NDE=",
+      "before": "NDMyNzQyODI3OTQw"
+    },
+    "previous": "https://graph.facebook.com/me/albums?limit=25&before=NDMyNzQyODI3OTQw"
+    "next": "https://graph.facebook.com/me/albums?limit=25&after=MTAxNTExOTQ1MjAwNzI5NDE="
+  }
+}
+`
+>
+>
+>    - before : This is the cursor that points to the start of the page of data that has been returned.
+>    - after : This is the cursor that points to the end of the page of data that has been returned.
+>    - next : The Graph API endpoint that will return the next page of data. If not included, this is the last page of data. Due to how pagination works with visibility and privacy, it is possible that a page may be empty but contain a 'next' paging link. Stop paging when the 'next' link no longer appears.
+>    - previous : The Graph API endpoint that will return the previous page of data. If not included, this is the first page of data.
+
