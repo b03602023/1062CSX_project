@@ -1,5 +1,5 @@
 # NOTE for [Using the Graph API](https://developers.facebook.com/docs/graph-api/using-graph-api?locale=zh_HK)
-```
+```json
 GET https://graph.facebook.com/v2.11
   /820882001277849
     ?fields=about,fan_count,website
@@ -19,7 +19,7 @@ GET https://graph.facebook.com/v2.11
 >
 >For example, performing a GET request on the Coca-Cola Page's /feed edge may return hundreds of Posts. You can limit the number of Posts returned for each page of results by doing this:
 >
->>```
+```json
 GET https://graph.facebook.com/v2.11
   /820882001277849
     ?fields=feed.limit(3)
@@ -33,7 +33,7 @@ GET https://graph.facebook.com/v2.11
 
 >Most edges allow you to publish objects to a collection on a node. You can do this by using a POST request on the node's edge. For example, you can publish a Comment on a Photo by using the Photo node's /comments edge:
 >
->```json
+```json
 POST https://graph.facebook.com
   /1809938745705498
     /comments
@@ -50,7 +50,7 @@ POST https://graph.facebook.com
 >
 >When reading an edge that supports cursor pagination, you will see the following JSON response:
 >
->```
+```json
 {
   "data": [
      ... Endpoint data is here
