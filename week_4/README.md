@@ -4,17 +4,32 @@
 
 
 ---
-- course_4
-    - example_1_twitterR.R
-    - example_2_facebookApi.R
-    - example_3_taipeiApi.R
-    - example_4_leafletMap.R
-    - example_5_socialNetworkAnalysis.R
+- in-class
+>Facebook: [Graph API Explorer](https://developers.facebook.com/tools/explorer/145634995501895/)
+>
+>向下搜尋更舊的貼文可以利用for迴圈以及`posts$posts$paging$`next``
 
-- week_4任務
+```{r}
+library(httr)
 
-    - https://ntu-csx-datascience.github.io/106-2RSampleCode/week_4/task_4/WordCloud-1.html    
-    - https://ntu-csx-datascience.github.io/106-2RSampleCode/week_4/task_4/WordCloud-2.html    
-    - 建立一命名為 week_4(or task_4, hw_4)的資料夾。
-    - 完成一份由透過社群網站 Open API 取得文本的文字雲上傳至資料夾中，須繳交兩份檔案[.Rmd, .html)]。
+token  = "EAACEdEose0cBAEdvZCE1C2g4rWepyX1DwggxJRl4BPVUD7QeyuKLYiDMzuqeEbXEX59vW2cEvbOZAEmsQfAl084x2RJCFxDGu2UOtCJbsCRma54ao6hZAdPvYwkDLPvt65GmIm84vxWd3hJ10Wi3hPNfFDgeHHs9vEu33W8IgJGBr1yWfbIZAGZAZBZAETpND0ZD"
+prefex = "https://graph.facebook.com/v2.12/twTOEFL/?fields=posts&access_token="
+url    = paste0(prefex, token)
+res    = httr::GET(url)
+posts  = content(res)
+
+
+posts=list()
+
+for(c in 1:5){
+  token  = "EAACEdEose0cBAEdvZCE1C2g4rWepyX1DwggxJRl4BPVUD7QeyuKLYiDMzuqeEbXEX59vW2cEvbOZAEmsQfAl084x2RJCFxDGu2UOtCJbsCRma54ao6hZAdPvYwkDLPvt65GmIm84vxWd3hJ10Wi3hPNfFDgeHHs9vEu33W8IgJGBr1yWfbIZAGZAZBZAETpND0ZD"
+  prefex = "https://graph.facebook.com/v2.12/twTOEFL/?fields=posts&access_token="
+  url    = paste0(prefex, token)
+  res    = httr::GET(url)
+  temp  = content(res)
+  posts = append(temp,posts)
+  url = posts$posts$paging$`next`
+}
+```
+
 
