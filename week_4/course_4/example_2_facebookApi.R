@@ -18,11 +18,12 @@ fb.oauth <- fbOAuth(
 rm(list=ls(all.names=TRUE))
 library(httr)
 prefex <- "https://graph.facebook.com/v2.10/"
-token <- "EAACEdEose0cBAJrIHMqETE3BQHbxLjCIoAgVQs4p0fDElBS371umZAInZCe0ZC5vDGzMvAFL73u1Oxki4ZCMm3R6xpSXFIG8IK7W03seZBla7TfKlpCLuqmWvBBLkvGbK5SkrmrNz07a5ZAMsq5OUUYjF2M7aMiGhw73F4ifSKLreaQyckzpZAic0jwBDZCIpEMZD"
+token <- "EAACEdEose0cBALV7EwW5gA5V0JhTMJ5oZBnSdCbZCCZClSOInZAS6v3p3ZAQxJN81K1ZAnJT3NXTOf6N4J0zTyV74JcA0vAYjmxFOPZAPkODlsGYAj7rkGRFJFffkaA0LyGlcSXtyZA6mlrcOIwbXJKfYekEkZCHdqaMvvnJZCqMwiJwQ09yI1kOoPyGXy3ZCkpp5kZD"
 number <- 1      #只爬入一篇貼文post
 
 # 271111393019477為TOEFL Taiwan的id
 # 136845026417486 為柯文哲的id
+# 175549807657 為低碳生活部落客的id
 # 限定從2017-03-11到2018-03-22 時間內最近的一篇貼文
 target <- "175549807657/posts?limit="
 control <- "&until=2018-03-22&since=2017-09-11"
