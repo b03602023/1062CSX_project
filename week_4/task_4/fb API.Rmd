@@ -1,0 +1,218 @@
+---
+title: "task 4--fb API"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r, }
+rm(list=ls(all.names=TRUE))
+library(httr)
+prefex <- "https://graph.facebook.com/v2.10/"
+token <- "EAACEdEose0cBAJrIHMqETE3BQHbxLjCIoAgVQs4p0fDElBS371umZAInZCe0ZC5vDGzMvAFL73u1Oxki4ZCMm3R6xpSXFIG8IK7W03seZBla7TfKlpCLuqmWvBBLkvGbK5SkrmrNz07a5ZAMsq5OUUYjF2M7aMiGhw73F4ifSKLreaQyckzpZAic0jwBDZCIpEMZD"
+number <- 1      #只爬入一篇貼文post
+
+# 271111393019477為TOEFL Taiwan的id
+# 136845026417486 為柯文哲的id
+# 限定從2017-03-11到2018-03-22 時間內最近的一篇貼文
+target <- "175549807657/posts?limit="
+control <- "&until=2018-03-22&since=2017-09-11"
+# "271111393019477/posts?limit=1&until=2018-03-22&since=2017-03-11&access_token="
+attrs <- paste0(target, number, control,"&access_token=")  
+url <- paste0(prefex, attrs, token)
+
+# 限定content是屬於httr這個library的
+res <- httr::GET(url)
+data <-  httr::content(res)
+#把data先解開他list的結構，再用matrix方式存下來
+#groups= matrix(unlist(data$data))
+groups <- matrix(unlist(data$data))  #groups到變成文字雲的時候就是變成文件doc了
+
+#存成檔案(因為要分梯次存，所以藉由count這個變數來存取每一篇文章)
+filename = paste0(1, ".txt")
+write.table(groups,filename)
+#要跳到下一頁
+after  = data$paging$cursors$after  # after : This is the cursor that points to the end of the page of data that has been returned.
+
+nextflg= data$paging$`next`    # == nextflg= data$paging[[2]]
+                              #nextflg是要用來判斷是否到動態頁的最底端了( the last page of data)
+
+count=1
+while(nextflg!= "NULL"){
+  
+  count=count+1
+  attrs  = paste0(target, number, control, "&after=", after,"&access_token=")
+ 
+  
+  url = paste0(prefex,attrs,token)
+  
+  nres= httr::GET(url)
+  ndata  = httr::content(nres)
+  ngroups= matrix(unlist(ndata$data))
+  #p1=ndata[["data"]][[1]]$message
+  #p1=ndata$data[[1]]$message
+  ##可用try_catch來測試，while loop停在哪一段 可以記錄走到哪一段停止
+  
+  after  = ndata$paging$cursors$after
+  nextflg = ndata$paging$`next`    # ndata$paging[[2]]
+  
+  filename = paste0(count, ".txt")  #檔名
+  
+  write.table(ngroups,filename)
+}
+```
+
+```{r}
+#--------文字雲---------
+#要做文字雲 抓一些需要用的套件
+#從電腦讀檔（仰賴 NLP/tm 這兩個函式庫）
+library(NLP)
+library(tm)
+library(jiebaRD)
+library(jiebaR)      #斷詞用
+library(RColorBrewer)
+library(wordcloud)
+#進行文本清理
+#par(family='STKaiti')  #字體設定；讓文字顯示成中文
+par(family=("Heiti TC Light"))
+filenames <- list.files(getwd(), pattern="*.txt")  #pattern: an optional regular expression. Only file names which match the regular expression will be returned.
+files <- lapply(filenames, readLines)  #Read some or all text lines from a connection.
+docs <- Corpus(VectorSource(files))  #Representing and computing on corpora(語料庫).
+#VectorSource: create a vector source
+ # A vector source interprets each element of the vector x 
+ # as a document.
+
+#Corpora: Representing and computing on corpora.
+#Corpus是一種文字檔資料格式--文本
+# 移除可能有問題的符號
+
+
+#要清洗掉的東西
+toSpace <- content_transformer(function(x, pattern) {
+  return (gsub(pattern, " ", x))
+}     # Create content transformers, i.e., functions which modify the content of an R objec
+      # gsub performs replacement of all matches.(以空白取代)
+#定義清洗：清洗就是把你找到的符號用空白取代
+)
+# content_transformer 為內文取代 function
+
+# tm_map(x, FUN, ...)
+# Interface to apply transformation functions (also denoted as mappings) to corpora.
+# x: A corpus. 語料庫("Corpus" is a collection of text documents.)
+# FUN: a transformation function taking a text document (a character vector when x is a SimpleCorpus) as input and returning a text document (a character vector of the same length as the input vector for SimpleCorpus). The function content_transformer can be used to create a wrapper to get and set the content of text documents.
+# 複製文本中你不要的符號刪除，可寫多行刪除多種符號
+#docs <- tm_map(docs, toSpace, "文本中你不要的符號貼於此")
+docs <- tm_map(docs,toSpace,"V1")
+docs <- tm_map(docs,toSpace,"\n")
+docs <- tm_map(docs,toSpace, "1")
+docs <- tm_map(docs,toSpace, "的")
+docs <- tm_map(docs,toSpace, "及")
+docs <- tm_map(docs,toSpace, "為")
+docs <- tm_map(docs,toSpace, "是")
+docs <- tm_map(docs,toSpace, "在")
+docs <- tm_map(docs,toSpace, "我")
+docs <- tm_map(docs,toSpace, "沒有")
+docs <- tm_map(docs,toSpace, "不要")
+docs <- tm_map(docs,toSpace, "只")
+docs <- tm_map(docs,toSpace, "正要")
+docs <- tm_map(docs,toSpace, "尤其")
+docs <- tm_map(docs,toSpace, "做")
+docs <- tm_map(docs,toSpace, "活動")
+docs <- tm_map(docs,toSpace, "停止")
+docs <- tm_map(docs,toSpace, "一下")
+docs <- tm_map(docs,toSpace, "進行")
+docs <- tm_map(docs,toSpace, "要")
+docs <- tm_map(docs,toSpace, "們")
+docs <- tm_map(docs,toSpace, "有")
+docs <- tm_map(docs,toSpace, "要")
+docs <- tm_map(docs,toSpace, "就")
+docs <- tm_map(docs,toSpace, "也")
+docs <- tm_map(docs,toSpace, "會")
+docs <- tm_map(docs,toSpace, "台灣")
+docs <- tm_map(docs,toSpace, "台北")
+docs <- tm_map(docs,toSpace, "就")
+docs <- tm_map(docs,toSpace, "生活")
+docs <- tm_map(docs,toSpace, "更")
+docs <- tm_map(docs,toSpace, "不")
+docs <- tm_map(docs,toSpace, "讓")
+docs <- tm_map(docs,toSpace, "都")
+docs <- tm_map(docs,toSpace, "與")
+docs <- tm_map(docs,toSpace, "小編")
+docs <- tm_map(docs,toSpace, "就")
+docs <- tm_map(docs,toSpace, "喔")
+docs <- tm_map(docs,toSpace, "新")
+docs <- tm_map(docs,toSpace, "年")
+docs <- tm_map(docs,toSpace, "可以")
+docs <- tm_map(docs,toSpace, "啊")
+docs <- tm_map(docs,toSpace, "文章")
+docs <- tm_map(docs,toSpace, "到")
+docs <- tm_map(docs,toSpace, "將")
+docs <- tm_map(docs,toSpace, "演講")
+docs <- tm_map(docs,toSpace, "格")
+docs <- tm_map(docs,toSpace, "一個")
+docs <- tm_map(docs,toSpace, "以")
+docs <- tm_map(docs,toSpace, "中")
+docs <- tm_map(docs,toSpace, "下午")
+docs <- tm_map(docs,toSpace, "但")
+docs <- tm_map(docs,toSpace, "吧")
+docs <- tm_map(docs,toSpace, "還")
+docs <- tm_map(docs,toSpace, "如何")
+docs <- tm_map(docs,toSpace, "將")
+docs <- tm_map(docs,toSpace, "跟")
+docs <- tm_map(docs,toSpace, "作者")
+docs <- tm_map(docs,toSpace, "請")
+docs <- tm_map(docs,toSpace, "低")
+docs <- tm_map(docs,toSpace, "[A-Za-z0-9]")
+#移除標點符號 (punctuation)
+#移除數字 (digits)、空白 (white space)
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, stripWhitespace)
+
+# 語詞詞幹化(stemmization)
+# 以英文為例
+#https://zh.wikipedia.org/wiki/词干提取
+#library(SnowballC)
+#確保任何形式的單字只會轉換成相同詞性出現一次
+#docs <- tm_map(docs, stemDocument)
+##Stem words in a text document using Porter's stemming algorithm
+
+#在 worker() 內可以設定各種不同的全切分法模型與引用外部詞庫，在這裡直接使用
+#預設的全切分法的混合模型，與 jieba 自帶的詞庫。
+mixseg = worker()
+#適時的增加詞庫
+# segment <- c("陳菊","布里斯本","高雄","重劃區","合作會","後勁溪")
+segment <- c("低碳環境部落客","綠建築","節能","氣候","台達","電子")
+new_user_word(mixseg,segment)   #Add user word
+
+
+#有詞頻之後就可以去畫文字雲
+jieba_tokenizer=function(d){
+  unlist(segment(d[[1]],mixseg))
+}
+
+seg = lapply(docs, jieba_tokenizer)
+freqFrame = as.data.frame(table(unlist(seg)))
+```
+
+```{r echo=FALSE}
+#畫出文字雲
+freqFrame = as.data.frame(table(unlist(seg)))
+freqFrame = freqFrame[-c(1:34),]
+wordcloud(freqFrame$Var1,freqFrame$Freq,
+          scale=c(5,0.5),min.freq=10,max.words=50,
+          random.order=FALSE, random.color=TRUE, 
+          rot.per=0, colors=brewer.pal(8, "Dark2"),
+          ordered.colors=FALSE,use.r.layout=FALSE,
+          fixed.asp=TRUE)
+
+```
+

@@ -1,0 +1,15 @@
+"V1"
+"1" "2017-07-29T12:00:01+0000"
+"2" "【尼莎颱風最新消息】
+
+臺北市政府依據中央氣象局最新天氣預報資料，並經北北基共識，於晚上8時宣布，明（30）日已達停止上班及上課標準。
+　
+｜防災資訊看這邊
+<U+25B8> 臺北市防災資訊網
+http://www.eoc.gov.taipei/EOC/
+<U+25B8> 臺北市政府Line官方帳號「防汛資訊訂閱」
+http://www.eoc.gov.taipei/EOC/WaterAlert/FloodAlert
+<U+25B8> 行動防災App
+https://goo.gl/Hcqk3i (iOS)
+https://goo.gl/UeHeBy (Android)"
+"3" "136845026417486_1082282575207055"
