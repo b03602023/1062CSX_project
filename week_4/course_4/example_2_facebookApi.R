@@ -51,12 +51,11 @@ count=1
 while(nextflg!= "NULL"){
   
   count=count+1
-  attrs  = paste0(target, number, control, "&after=", after,"&access_token=")
-  #看不懂?? nexturl= paste0(prefex,attrs,"&after=",after)
-  
-  url = paste0(prefex,attrs,token)
-  
-  nres= httr::GET(url)
+  #attrs  = paste0(target, number, control, "&after=", after,"&access_token=")
+  #url = paste0(prefex,attrs,token)
+  #上面的code和nextflg的意思是一樣的
+  nurl = nextflg
+  nres= httr::GET(nurl)
   ndata  = httr::content(nres)
   ngroups= matrix(unlist(ndata$data))
   #p1=ndata[["data"]][[1]]$message
@@ -198,15 +197,24 @@ jieba_tokenizer=function(d){
 }
 
 seg = lapply(docs, jieba_tokenizer)
+#轉成文件
 freqFrame = as.data.frame(table(unlist(seg)))
 #畫出文字雲
+library(extrafont)
+#extrafont::loadfonts(device="win")
+#extrafont::fonttable()
+#extrafont::font_import("C:/Windows/Fonts/", pattern = "RobotoCondensed")
+font_import(paths = NULL, recursive = TRUE, prompt = TRUE,pattern = Arial)
+par(family=("Arial"))
+wordcloud(freqFrame$Var1,freqFrame$Freq,
+          min.freq=10,max.words=50)
+
 wordcloud(freqFrame$Var1,freqFrame$Freq,
           min.freq=10,max.words=50,
           random.order=TRUE,random.color=TRUE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,
           fixed.asp=TRUE)
-
 
 #文字雲解說：
 #min.freq=50：最小頻率為50
@@ -232,6 +240,8 @@ prefex = "https://graph.facebook.com/v2.12/twTOEFL/?fields=posts&access_token="
 url    = paste0(prefex, token)
 res    = httr::GET(url)
 posts  = content(res)
+
+
 
 
 ##------------載入較舊頁面(有問題)---------------
