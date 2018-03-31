@@ -1,5 +1,6 @@
 #---------Rfacebook--------
-token = "EAACEdEose0cBAKya0xRyk8vu2DNOEW77eoIHZBG7G2kbEZAwfHvqpaHq9eq2CUMod3LYYNnCQ3VnEQHGZCEer1ZCXDjXHgNlIqZCgYkDXB18BHnsLn4ZCLYlcbELCrTpAyFQIGS4ZBZAoQEtISaqLmCtba1034jZCTj1DkNIZBgSsVozEiOwRQIyauAfvZCYqxGKKAi2Pe1z8TFIAZDZD"
+token = "EAACEdEose0cBAPWqw5JDTSaYbWgWYcCsGJ11ZAuZBbFR6ZAZBlahtxdas6Sk2ERLKRBW1V3rZCJNjXo1Fp26ABZA85gyiLgi85fDhUt4CbwTIZBcLTUmsZCZCJNUwKvpCW2o5m2DxSWvby8TS5v0ETvk2srZB7UvU43TvcVPlR6pcz4CaFMvLYQxnZB92efbGzrZAX8ZD"
+library(Rfacebook)
 me <- getUsers("me", token, private_info = TRUE)
 me$name
 
@@ -9,6 +10,8 @@ fb.oauth <- fbOAuth(
   app_secret="5162044ac94f64461ed587312d424521",
   extended_permissions = TRUE)
 
+me <- getUsers("me",token=fb.oauth)
+me$name
 
 
 
