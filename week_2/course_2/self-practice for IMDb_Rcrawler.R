@@ -12,9 +12,11 @@ library(magrittr)
 # Set url
 url <- "https://www.imdb.com/chart/top?ref_=nv_wl_img_3"
 # Get response
+# Download the HTML and turn it into an XML file with  read_html()
 res <- read_html(url)
 
 # Parse the content and extract the titles
+# Extract specific nodes with html_nodes()
 raw.titles <- res %>% html_nodes("td.titleColumn")
 raw.rate <- res %>% html_nodes(x = ., css = "td.ratingColumn.imdbRating")
 # Extract link

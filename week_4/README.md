@@ -14,7 +14,8 @@
 >Facebook: [Graph API Explorer](https://developers.facebook.com/tools/explorer/145634995501895/)
 >
 >向下搜尋更舊的貼文可以利用for迴圈以及`posts$posts$paging$`next``
-
+>20180330遇到的問題：如果利用url來控制日期爬取貼文的話，會造成橫跨不同年份的，在while迴圈中會出現error，因為雖然有nextflg，但是content(GET(url))會無法抓取到內容，造成ndata為空的list，而出現error。
+>可能解決方法：
 
 
 ```{r}

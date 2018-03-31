@@ -15,10 +15,12 @@ fb.oauth <- fbOAuth(
 #---------參考的code (可以解決載入較舊頁面的問題)-------
 #--------限定時間期限的蒐集貼文方法------
 #-----------defining the time------------
+#20180330發現問題: 對於抓取橫跨不同年份的貼文，在while迴圈中會出現error
+#就是雖然有nextflg，但是會造成ndata為空的list，而出現error。
 rm(list=ls(all.names=TRUE))
 library(httr)
 prefex <- "https://graph.facebook.com/v2.10/"
-token <- "EAACEdEose0cBALV7EwW5gA5V0JhTMJ5oZBnSdCbZCCZClSOInZAS6v3p3ZAQxJN81K1ZAnJT3NXTOf6N4J0zTyV74JcA0vAYjmxFOPZAPkODlsGYAj7rkGRFJFffkaA0LyGlcSXtyZA6mlrcOIwbXJKfYekEkZCHdqaMvvnJZCqMwiJwQ09yI1kOoPyGXy3ZCkpp5kZD"
+token <- "EAACEdEose0cBAJUmuOyrZA9Hh61tIf5AHbSGwsckigyX9zrEAxbDZCWJPmqOpj3fEqajGblhqMwj1BfBwDwUgE2jvDOF2lqy5WoVhZC73g8ZCHsRZBmOfqkCRLnkzMh2kT5J5gLQT5fhZCtcejK08fv2NNAXkXUGQ3v9ZBVyPIJXKHae1vfvL1Ow5MC7LcGgukZD"
 number <- 1      #只爬入一篇貼文post
 
 # 271111393019477為TOEFL Taiwan的id
@@ -26,8 +28,8 @@ number <- 1      #只爬入一篇貼文post
 # 175549807657 為低碳生活部落客的id
 # 限定從2017-03-11到2018-03-22 時間內最近的一篇貼文
 target <- "175549807657/posts?limit="
-control <- "&until=2018-03-22&since=2017-09-11"
-# "271111393019477/posts?limit=1&until=2018-03-22&since=2017-03-11&access_token="
+control <- "&until=2018-03-22&since=2018-01-01"
+# "271111393019477/posts?limit=1&until=2018-03-22&since=2017-01-12&access_token="
 attrs <- paste0(target, number, control,"&access_token=")  
 url <- paste0(prefex, attrs, token)
 
@@ -48,7 +50,7 @@ nextflg= data$paging$`next`    # == nextflg= data$paging[[2]]
                               #nextflg是要用來判斷是否到動態頁的最底端了( the last page of data)
 
 count=1
-while(nextflg!= "NULL"){
+while(class(nextflg) != "NULL"){
   
   count=count+1
   #attrs  = paste0(target, number, control, "&after=", after,"&access_token=")
@@ -81,7 +83,7 @@ library(RColorBrewer)
 library(wordcloud)
 #進行文本清理
 #par(family='STKaiti')  #字體設定；讓文字顯示成中文
-par(family=("Heiti TC Light"))
+#par(family=("Heiti TC Light"))
 filenames <- list.files(getwd(), pattern="*.txt")  #pattern: an optional regular expression. Only file names which match the regular expression will be returned.
 files <- lapply(filenames, readLines)  #Read some or all text lines from a connection.
 docs <- Corpus(VectorSource(files))  #Representing and computing on corpora(語料庫).
@@ -165,6 +167,8 @@ docs <- tm_map(docs,toSpace, "吧")
 docs <- tm_map(docs,toSpace, "還")
 docs <- tm_map(docs,toSpace, "如何")
 docs <- tm_map(docs,toSpace, "將")
+docs <- tm_map(docs,toSpace, "﹍")
+
 
 
 docs <- tm_map(docs,toSpace, "[A-Za-z0-9]")
@@ -199,22 +203,36 @@ jieba_tokenizer=function(d){
 seg = lapply(docs, jieba_tokenizer)
 #轉成文件
 freqFrame = as.data.frame(table(unlist(seg)))
+# 觀察出現由多到寡的文字
+View(freqFrame[order(freqFrame$Freq, decreasing = TRUE),])
 #畫出文字雲
 library(extrafont)
 #extrafont::loadfonts(device="win")
 #extrafont::fonttable()
-#extrafont::font_import("C:/Windows/Fonts/", pattern = "RobotoCondensed")
-font_import(paths = NULL, recursive = TRUE, prompt = TRUE,pattern = Arial)
-par(family=("Arial"))
+extrafont::font_import("C:/Windows/Fonts", pattern = "Arial")
+#font_import(paths = NULL, recursive = TRUE, prompt = TRUE,pattern = Arial)
+#par(family=("Arial"))
+windowsFonts(Times=windowsFont("TT Times New Roman"))
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=10,max.words=50)
+          min.freq=10,max.words=50, random.order=FALSE,random.color=FALSE,
+          colors=rainbow(length(row.names(freqFrame))), ordered.colors=TRUE,
+          family="Times")
 
+windowsFonts(Times=windowsFont("TT Times New Roman"))
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=10,max.words=50,
-          random.order=TRUE,random.color=TRUE, 
+          min.freq=50,max.words=50,
+          random.order=FALSE,random.color=FALSE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,
-          fixed.asp=TRUE)
+          fixed.asp=TRUE,family="Times")
+
+windowsFonts(Times=windowsFont("TT Times New Roman"))
+wordcloud(freqFrame$Var1,freqFrame$Freq,
+          scale=c(4.5,0.1),min.freq=50,max.words=150,
+          random.order=TRUE, random.color=FALSE,
+          rot.per=.1, colors=brewer.pal(8, "Dark2"),
+          ordered.colors=FALSE,use.r.layout=FALSE,
+          fixed.asp=TRUE,family="Times")
 
 #文字雲解說：
 #min.freq=50：最小頻率為50
