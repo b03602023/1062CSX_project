@@ -24,7 +24,7 @@
 * Collect the raw text from FB API
 * Learn how to clean and process the raw text and ouput the wordcloud
 
-    [result]()
+    [result](https://b03602023.github.io/1062CSX_project//week_4/task_4/fb_API.html)
 
 ## week 5
 

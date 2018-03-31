@@ -20,8 +20,8 @@ fb.oauth <- fbOAuth(
 rm(list=ls(all.names=TRUE))
 library(httr)
 prefex <- "https://graph.facebook.com/v2.10/"
-token <- "EAACEdEose0cBAJUmuOyrZA9Hh61tIf5AHbSGwsckigyX9zrEAxbDZCWJPmqOpj3fEqajGblhqMwj1BfBwDwUgE2jvDOF2lqy5WoVhZC73g8ZCHsRZBmOfqkCRLnkzMh2kT5J5gLQT5fhZCtcejK08fv2NNAXkXUGQ3v9ZBVyPIJXKHae1vfvL1Ow5MC7LcGgukZD"
-number <- 1      #只爬入一篇貼文post
+token <- "EAACEdEose0cBANqp2BR5nyol0tG4zy31oiMavXdpmA8rujX97HWjJcnM14GWxL16mKjm2kLsSWnBrgD40hYGWemQscweBZBT53ywViZB6lXJfT7ZCx5TO0QmLwI9NfMDJxpLlCGF0a9zL5FV9JjjZAnotd5SlKaZClfFUm99sNMa31DBOsyvlksiKGcVQs0sZD"
+number <- 5      #只爬入一篇貼文post
 
 # 271111393019477為TOEFL Taiwan的id
 # 136845026417486 為柯文哲的id
@@ -191,7 +191,7 @@ docs <- tm_map(docs, stripWhitespace)
 mixseg = worker()
 #適時的增加詞庫
 # segment <- c("陳菊","布里斯本","高雄","重劃區","合作會","後勁溪")
-segment <- c("低碳環境部落客","綠建築","節能","氣候","台達電子")
+segment <- c("低碳生活部落格","綠建築","節能","氣候變遷","電動車","台達電子","台達電子文教基金會","綠色能源")
 new_user_word(mixseg,segment)   #Add user word
 
 
@@ -205,34 +205,27 @@ seg = lapply(docs, jieba_tokenizer)
 freqFrame = as.data.frame(table(unlist(seg)))
 # 觀察出現由多到寡的文字
 View(freqFrame[order(freqFrame$Freq, decreasing = TRUE),])
+freqFrame[freqFrame$Var1=="雙城記",]
 #畫出文字雲
 library(extrafont)
+#======fail to debug=====
 #extrafont::loadfonts(device="win")
 #extrafont::fonttable()
-extrafont::font_import("C:/Windows/Fonts", pattern = "Arial")
+#extrafont::font_import("C:/Windows/Fonts", pattern = "Arial")
 #font_import(paths = NULL, recursive = TRUE, prompt = TRUE,pattern = Arial)
 #par(family=("Arial"))
-windowsFonts(Times=windowsFont("TT Times New Roman"))
+#======fail to debug=====
+#20180331 解決問題 Font family not found in Windows font database
+#需要先網路下載字型後，放在C:\Windows\Fonts資料夾中
+#在用windowsFonts指定字型
+windowsFonts(TC=windowsFont("Heiti TC Light"))
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=10,max.words=50, random.order=FALSE,random.color=FALSE,
-          colors=rainbow(length(row.names(freqFrame))), ordered.colors=TRUE,
-          family="Times")
-
-windowsFonts(Times=windowsFont("TT Times New Roman"))
-wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=50,max.words=50,
+          scale=c(5,0.5),
+          min.freq=5,max.words=50,
           random.order=FALSE,random.color=FALSE, 
-          rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
+          rot.per=.2, colors=brewer.pal(11, "Paired")[c(1:7)],
           ordered.colors=FALSE,use.r.layout=FALSE,
-          fixed.asp=TRUE,family="Times")
-
-windowsFonts(Times=windowsFont("TT Times New Roman"))
-wordcloud(freqFrame$Var1,freqFrame$Freq,
-          scale=c(4.5,0.1),min.freq=50,max.words=150,
-          random.order=TRUE, random.color=FALSE,
-          rot.per=.1, colors=brewer.pal(8, "Dark2"),
-          ordered.colors=FALSE,use.r.layout=FALSE,
-          fixed.asp=TRUE,family="Times")
+          fixed.asp=TRUE,family="TC")
 
 #文字雲解說：
 #min.freq=50：最小頻率為50

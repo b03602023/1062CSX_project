@@ -7,49 +7,40 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## FB API
+#### 利用R語言，爬取"低碳生活部落格"臉書粉絲專頁的貼文。
+#### 使用httr套件包
+#### 限定蒐集貼文的時間期間
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+>***
+> #####20180330發現問題: 對於抓取橫跨不同年份的貼文，在while迴圈中會出現error
+> #####所以針對蒐集橫跨不同年份的貼文，需要另外處理。
+***
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r eval=FALSE}
-
-
-#---------參考的code (可以解決載入較舊頁面的問題)-------
 #--------限定時間期限的蒐集貼文方法------
-#-----------defining the time------------
-#20180330發現問題: 對於抓取橫跨不同年份的貼文，在while迴圈中會出現error
-#就是雖然有nextflg，但是會造成ndata為空的list，而出現error。
-rm(list=ls(all.names=TRUE))
 library(httr)
 prefex <- "https://graph.facebook.com/v2.10/"
 token <- "EAACEdEose0cBAJUmuOyrZA9Hh61tIf5AHbSGwsckigyX9zrEAxbDZCWJPmqOpj3fEqajGblhqMwj1BfBwDwUgE2jvDOF2lqy5WoVhZC73g8ZCHsRZBmOfqkCRLnkzMh2kT5J5gLQT5fhZCtcejK08fv2NNAXkXUGQ3v9ZBVyPIJXKHae1vfvL1Ow5MC7LcGgukZD"
 number <- 1      #只爬入一篇貼文post
 
-# 271111393019477為TOEFL Taiwan的id
-# 136845026417486 為柯文哲的id
 # 175549807657 為低碳生活部落客的id
-# 限定從2017-03-11到2018-03-22 時間內最近的一篇貼文
+# 限定從2015-11-01到2015-12-31時間內最近的一篇貼文
 target <- "175549807657/posts?limit="
-control <- "&until=2018-03-22&since=2018-01-01"
-# "271111393019477/posts?limit=1&until=2018-03-22&since=2017-01-12&access_token="
+control <- "&until=2015-12-31&since=2015-11-01"
 attrs <- paste0(target, number, control,"&access_token=")  
 url <- paste0(prefex, attrs, token)
 
-# 限定content是屬於httr這個library的
 res <- httr::GET(url)
 data <-  httr::content(res)
 #把data先解開他list的結構，再用matrix方式存下來
-#groups= matrix(unlist(data$data))
-groups <- matrix(unlist(data$data))  #groups到變成文字雲的時候就是變成文件doc了
+groups <- matrix(unlist(data$data))  #groups變成文字雲的時候就是變成文件doc了
 
 #存成檔案(因為要分梯次存，所以藉由count這個變數來存取每一篇文章)
 filename = paste0(1, ".txt")
 write.table(groups,filename)
 #要跳到下一頁
-after  = data$paging$cursors$after  # after : This is the cursor that points to the end of the page of data that has been returned.
-
 nextflg= data$paging$`next`    # == nextflg= data$paging[[2]]
                               #nextflg是要用來判斷是否到動態頁的最底端了( the last page of data)
 
@@ -57,9 +48,7 @@ count=1
 while(class(nextflg) != "NULL"){
   
   count=count+1
-  #attrs  = paste0(target, number, control, "&after=", after,"&access_token=")
-  #url = paste0(prefex,attrs,token)
-  #上面的code和nextflg的意思是一樣的
+
   nurl = nextflg
   nres= httr::GET(nurl)
   ndata  = httr::content(nres)
@@ -67,16 +56,14 @@ while(class(nextflg) != "NULL"){
   #p1=ndata[["data"]][[1]]$message
   #p1=ndata$data[[1]]$message
   ##可用try_catch來測試，while loop停在哪一段 可以記錄走到哪一段停止
-  
-  after  = ndata$paging$cursors$after
   nextflg = ndata$paging$`next`    # ndata$paging[[2]]
-  
   filename = paste0(count, ".txt")  #檔名
-  
   write.table(ngroups,filename)
 }
 ```
-進行斷字、文字清洗、製作文字雲
+
+進行斷字、文字清洗
+
 ```{r}
 #--------文字雲---------
 #要做文字雲 抓一些需要用的套件
@@ -84,12 +71,10 @@ while(class(nextflg) != "NULL"){
 library(NLP)
 library(tm)
 library(jiebaRD)
-library(jiebaR)      #斷詞用
+library(jiebaR)       #斷詞用
 library(RColorBrewer)
 library(wordcloud)
 #進行文本清理
-#par(family='STKaiti')  #字體設定；讓文字顯示成中文
-#par(family=("Heiti TC Light"))
 filenames <- list.files(getwd(), pattern="*.txt")  #pattern: an optional regular expression. Only file names which match the regular expression will be returned.
 files <- lapply(filenames, readLines)  #Read some or all text lines from a connection.
 docs <- Corpus(VectorSource(files))  #Representing and computing on corpora(語料庫).
@@ -100,8 +85,6 @@ docs <- Corpus(VectorSource(files))  #Representing and computing on corpora(語�
 #Corpora: Representing and computing on corpora.
 #Corpus是一種文字檔資料格式--文本
 # 移除可能有問題的符號
-
-
 #要清洗掉的東西
 toSpace <- content_transformer(function(x, pattern) {
   return (gsub(pattern, " ", x))
@@ -157,12 +140,10 @@ docs <- tm_map(docs,toSpace, "就")
 docs <- tm_map(docs,toSpace, "喔")
 docs <- tm_map(docs,toSpace, "新")
 docs <- tm_map(docs,toSpace, "年")
-docs <- tm_map(docs,toSpace, "可以")
+docs <- tm_map(docs,toSpace, "了")
 docs <- tm_map(docs,toSpace, "啊")
-docs <- tm_map(docs,toSpace, "文章")
 docs <- tm_map(docs,toSpace, "到")
 docs <- tm_map(docs,toSpace, "將")
-docs <- tm_map(docs,toSpace, "演講")
 docs <- tm_map(docs,toSpace, "格")
 docs <- tm_map(docs,toSpace, "一個")
 docs <- tm_map(docs,toSpace, "以")
@@ -174,9 +155,6 @@ docs <- tm_map(docs,toSpace, "還")
 docs <- tm_map(docs,toSpace, "如何")
 docs <- tm_map(docs,toSpace, "將")
 docs <- tm_map(docs,toSpace, "﹍")
-
-
-
 docs <- tm_map(docs,toSpace, "[A-Za-z0-9]")
 #移除標點符號 (punctuation)
 #移除數字 (digits)、空白 (white space)
@@ -196,10 +174,8 @@ docs <- tm_map(docs, stripWhitespace)
 #預設的全切分法的混合模型，與 jieba 自帶的詞庫。
 mixseg = worker()
 #適時的增加詞庫
-segment <- c("低碳環境部落客","綠建築","節能","氣候","台達電子")
+segment <- c("低碳生活部落格","綠建築","節能","氣候變遷","電動車","台達電子","台達電子文教基金會","綠色能源")
 new_user_word(mixseg,segment)   #Add user word
-
-
 #有詞頻之後就可以去畫文字雲
 jieba_tokenizer=function(d){
   unlist(segment(d[[1]],mixseg))
@@ -209,34 +185,27 @@ seg = lapply(docs, jieba_tokenizer)
 #轉成文件
 freqFrame = as.data.frame(table(unlist(seg)))
 # 觀察出現由多到寡的文字
-#View(freqFrame[order(freqFrame$Freq, decreasing = TRUE),])
+```
+
+
+繪製文字雲
+
+
+```{r}
 #畫出文字雲
 library(extrafont)
-#extrafont::loadfonts(device="win")
-#extrafont::fonttable()
-#extrafont::font_import("C:/Windows/Fonts", pattern = "Arial")
-#font_import(paths = NULL, recursive = TRUE, prompt = TRUE,pattern = Arial)
-#par(family=("Arial"))
-windowsFonts(Times=windowsFont("TT Times New Roman"))
+windowsFonts(TC=windowsFont("Heiti TC Light"))
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=10,max.words=50, random.order=FALSE,random.color=FALSE,
-          colors=rainbow(length(row.names(freqFrame))), ordered.colors=TRUE,
-          family="Times")
-
-windowsFonts(Times=windowsFont("TT Times New Roman"))
-wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=50,max.words=50,
+          scale=c(5,0.5),
+          min.freq=5,max.words=50,
           random.order=FALSE,random.color=FALSE, 
-          rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
+          rot.per=.2, colors=brewer.pal(11, "Paired")[c(1:17)],
           ordered.colors=FALSE,use.r.layout=FALSE,
-          fixed.asp=TRUE,family="Times")
-
-windowsFonts(Times=windowsFont("TT Times New Roman"))
-wordcloud(freqFrame$Var1,freqFrame$Freq,
-          scale=c(4.5,0.1),min.freq=50,max.words=150,
-          random.order=TRUE, random.color=FALSE,
-          rot.per=.1, colors=brewer.pal(8, "Dark2"),
-          ordered.colors=FALSE,use.r.layout=FALSE,
-          fixed.asp=TRUE,family="Times")
+          fixed.asp=TRUE,family="TC")
 ```
+
+
+#### 低碳生活部落格是是由台達電子文教基金會所經營的平台，內容著重在探討氣候變遷的相關議題，可以看出內容主要是針對低碳、綠色、氣候變遷以及能夠減能減碳以及減緩氣候變遷的方法，例如太陽能、電動車、綠建築、再生能源相關，且因為推廣相關的觀念，這個粉絲專頁會分享文章或舉辦一些演講，所以像是演講、場、晚、文章的文字也很頻繁出現。
+
+#### 觀察發現"雙城記"的字眼很常出現，原因為最近台達電子基文教基金會出了一本叫做"低碳生活雙城記"
 
