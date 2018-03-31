@@ -196,7 +196,6 @@ docs <- tm_map(docs, stripWhitespace)
 #預設的全切分法的混合模型，與 jieba 自帶的詞庫。
 mixseg = worker()
 #適時的增加詞庫
-# segment <- c("陳菊","布里斯本","高雄","重劃區","合作會","後勁溪")
 segment <- c("低碳環境部落客","綠建築","節能","氣候","台達電子")
 new_user_word(mixseg,segment)   #Add user word
 
@@ -215,7 +214,7 @@ freqFrame = as.data.frame(table(unlist(seg)))
 library(extrafont)
 #extrafont::loadfonts(device="win")
 #extrafont::fonttable()
-extrafont::font_import("C:/Windows/Fonts", pattern = "Arial")
+#extrafont::font_import("C:/Windows/Fonts", pattern = "Arial")
 #font_import(paths = NULL, recursive = TRUE, prompt = TRUE,pattern = Arial)
 #par(family=("Arial"))
 windowsFonts(Times=windowsFont("TT Times New Roman"))

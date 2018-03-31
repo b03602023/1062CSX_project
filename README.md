@@ -8,5 +8,28 @@
 
 ## week 2
 * Learn markdown to edit the README.md 
+* Learn the structure of HTML
+* Learn using R to collect raw text by the "rvest" package
+* Parse PChome
+
+    [result](https://b03602023.github.io/1062CSX_project/week_2/task_2/Rcrawler_PChome.html)
+
+## week 3
+* Learn the concept of ggplot, plotly and ggmap
+* Learn using R to collect the open data offered by the government (JSON)
+
+    [result](https://b03602023.github.io/1062CSX_project/week_3/ggplot2practice.html)
+
+## week 4
+* Collect the raw text from FB API
+* Learn how to clean and process the raw text and ouput the wordcloud
+
+    [result]()
+
+## week 5
+
+
+
+
 
 
