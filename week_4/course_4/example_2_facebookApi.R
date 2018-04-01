@@ -23,7 +23,7 @@ me$name
 rm(list=ls(all.names=TRUE))
 library(httr)
 prefex <- "https://graph.facebook.com/v2.10/"
-token <- "EAACEdEose0cBANqp2BR5nyol0tG4zy31oiMavXdpmA8rujX97HWjJcnM14GWxL16mKjm2kLsSWnBrgD40hYGWemQscweBZBT53ywViZB6lXJfT7ZCx5TO0QmLwI9NfMDJxpLlCGF0a9zL5FV9JjjZAnotd5SlKaZClfFUm99sNMa31DBOsyvlksiKGcVQs0sZD"
+token <- "EAACEdEose0cBAA7yCOCQG6qf4binKSpLjHEYerAZAKObQao5OBgc6aAk4oihgXdrJRuJUgJdxCOYRH6sxp8iQBeNGY1iZAUXdXkPgLsrQpwsuecrFN9j3kzJh0INXmjXgTZBGgJikpKtcXkUs9DkmQRGJHr5uEZAuorNj3ZCHD5R0JJ8ZAzCu4StfJk1ZBkCL4ZD"
 number <- 5      #只爬入一篇貼文post
 
 # 271111393019477為TOEFL Taiwan的id
@@ -85,9 +85,12 @@ library(jiebaR)      #斷詞用
 library(RColorBrewer)
 library(wordcloud)
 #進行文本清理
-#par(family='STKaiti')  #字體設定；讓文字顯示成中文
+par(family='STKaiti')  #字體設定；讓文字顯示成中文
+#將R環境設定成中文
+#Sys.setlocale(category = "LC_ALL", locale = "cht") 
 #par(family=("Heiti TC Light"))
 # 讀入wd內的資料夾中所有 *.txt 文章
+# 變成docs作為被分析的語料庫
 filenames <- list.files(getwd(), pattern="*.txt")  #pattern: an optional regular expression. Only file names which match the regular expression will be returned.
 files <- lapply(filenames, readLines)  #Read some or all text lines from a connection.
 docs <- Corpus(VectorSource(files))  #Representing and computing on corpora(語料庫).
@@ -101,6 +104,12 @@ docs <- Corpus(VectorSource(files))  #Representing and computing on corpora(語�
 
 
 #要清洗掉的東西
+## 進行清除停用字符，停用字符指的是一些文章中常見的單字，
+## 但卻無法提供我們資訊的冗字。例如有些、以及、因此…等等字詞。
+### 20180401發現要先清洗掉停用字，再清洗標點符號，不然有些文字會變成亂碼
+### 例如「節能標竿」會變成「葛鉏衧\xf1 」
+### 但仍不知道為什麼會這樣
+
 toSpace <- content_transformer(function(x, pattern) {
   return (gsub(pattern, " ", x))
 }     # Create content transformers, i.e., functions which modify the content of an R objec
@@ -108,7 +117,6 @@ toSpace <- content_transformer(function(x, pattern) {
 #定義清洗：清洗就是把你找到的符號用空白取代
 )
 # content_transformer 為內文取代 function
-
 # tm_map(x, FUN, ...)
 # Interface to apply transformation functions (also denoted as mappings) to corpora.
 # x: A corpus. 語料庫("Corpus" is a collection of text documents.)
@@ -172,15 +180,17 @@ docs <- tm_map(docs,toSpace, "還")
 docs <- tm_map(docs,toSpace, "如何")
 docs <- tm_map(docs,toSpace, "將")
 docs <- tm_map(docs,toSpace, "﹍")
-
-
-
+# 清除大小寫英文與數字
 docs <- tm_map(docs,toSpace, "[A-Za-z0-9]")
 #移除標點符號 (punctuation)
 #移除數字 (digits)、空白 (white space)
 docs <- tm_map(docs, removePunctuation)
 docs <- tm_map(docs, removeNumbers)
 docs <- tm_map(docs, stripWhitespace)
+
+#
+tdm <- TermDocumentMatrix(docs)
+inspect(tdm[1:10, 1:10])
 
 # 語詞詞幹化(stemmization)
 # 以英文為例
@@ -200,17 +210,18 @@ segment <- c("低碳生活部落格","綠建築","節能","氣候變遷","電動
 new_user_word(mixseg,segment)   #Add user word
 
 
-#有詞頻之後就可以去畫文字雲
+#斷詞  mixseg[groups]
 jieba_tokenizer=function(d){
   unlist(segment(d[[1]],mixseg))
 }
-
 seg = lapply(docs, jieba_tokenizer)
 #轉成文件
+#詞頻結果:
 freqFrame = as.data.frame(table(unlist(seg)))
 # 觀察出現由多到寡的文字
 View(freqFrame[order(freqFrame$Freq, decreasing = TRUE),])
 freqFrame[freqFrame$Var1=="雙城記",]
+#有詞頻之後就可以去畫文字雲
 #畫出文字雲
 library(extrafont)
 #======fail to debug=====
@@ -231,6 +242,25 @@ wordcloud(freqFrame$Var1,freqFrame$Freq,
           rot.per=.2, colors=brewer.pal(11, "Paired")[c(1:7)],
           ordered.colors=FALSE,use.r.layout=FALSE,
           fixed.asp=TRUE,family="TC")
+
+wordcloud(freqFrame$Var1,freqFrame$Freq,
+          scale=c(5,0.5),
+          min.freq=5,max.words=50,
+          random.order=FALSE,random.color=FALSE, 
+          rot.per=.2, colors=brewer.pal(11, "Paired")[c(1:17)],
+          ordered.colors=FALSE,use.r.layout=FALSE,
+          fixed.asp=TRUE,family="TC")
+# wordcloud2生成文字雲
+# https://www.r-graph-gallery.com/the-wordcloud2-library/
+# https://kknews.cc/zh-tw/other/5gvgba6.html
+library(wordcloud2)
+figPath = system.file("factory.png",package = "wordcloud2")
+wordcloud2(freqFrame[freqFrame$Freq>10,], size = 0.8, fontFamily = "微軟雅黑",
+           color = "random-light", backgroundColor = "white",
+           shape = "star"
+
+           )
+
 
 #文字雲解說：
 #min.freq=50：最小頻率為50

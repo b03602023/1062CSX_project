@@ -15,6 +15,10 @@ knitr::opts_chunk$set(echo = TRUE)
 >***
 > #####20180330發現問題: 對於抓取橫跨不同年份的貼文，在while迴圈中會出現error
 > #####所以針對蒐集橫跨不同年份的貼文，需要另外處理。
+>#####20180330發現問題: 用Rfacebook套件的fbOAuth重新導向 URI，由於給出了site URL是HTTP，但facebook for developers強制使用 HTTPS
+>
+>
+>
 ***
 
 
@@ -65,9 +69,6 @@ while(class(nextflg) != "NULL"){
 進行斷字、文字清洗
 
 ```{r}
-#--------文字雲---------
-#要做文字雲 抓一些需要用的套件
-#從電腦讀檔（仰賴 NLP/tm 這兩個函式庫）
 library(NLP)
 library(tm)
 library(jiebaRD)
@@ -75,6 +76,8 @@ library(jiebaR)       #斷詞用
 library(RColorBrewer)
 library(wordcloud)
 #進行文本清理
+# 讀入wd內的資料夾中所有 *.txt 文章
+# 變成docs作為被分析的語料庫
 filenames <- list.files(getwd(), pattern="*.txt")  #pattern: an optional regular expression. Only file names which match the regular expression will be returned.
 files <- lapply(filenames, readLines)  #Read some or all text lines from a connection.
 docs <- Corpus(VectorSource(files))  #Representing and computing on corpora(語料庫).
@@ -85,7 +88,15 @@ docs <- Corpus(VectorSource(files))  #Representing and computing on corpora(語�
 #Corpora: Representing and computing on corpora.
 #Corpus是一種文字檔資料格式--文本
 # 移除可能有問題的符號
+
+
 #要清洗掉的東西
+## 進行清除停用字符，停用字符指的是一些文章中常見的單字，
+## 但卻無法提供我們資訊的冗字。例如有些、以及、因此…等等字詞。
+### 20180401發現要先清洗掉停用字，再清洗標點符號，不然有些文字會變成亂碼
+### 例如「節能標竿」會變成「葛鉏衧\xf1 」
+### 但仍不知道為什麼會這樣
+
 toSpace <- content_transformer(function(x, pattern) {
   return (gsub(pattern, " ", x))
 }     # Create content transformers, i.e., functions which modify the content of an R objec
@@ -93,7 +104,6 @@ toSpace <- content_transformer(function(x, pattern) {
 #定義清洗：清洗就是把你找到的符號用空白取代
 )
 # content_transformer 為內文取代 function
-
 # tm_map(x, FUN, ...)
 # Interface to apply transformation functions (also denoted as mappings) to corpora.
 # x: A corpus. 語料庫("Corpus" is a collection of text documents.)
@@ -140,10 +150,12 @@ docs <- tm_map(docs,toSpace, "就")
 docs <- tm_map(docs,toSpace, "喔")
 docs <- tm_map(docs,toSpace, "新")
 docs <- tm_map(docs,toSpace, "年")
-docs <- tm_map(docs,toSpace, "了")
+docs <- tm_map(docs,toSpace, "可以")
 docs <- tm_map(docs,toSpace, "啊")
+docs <- tm_map(docs,toSpace, "文章")
 docs <- tm_map(docs,toSpace, "到")
 docs <- tm_map(docs,toSpace, "將")
+docs <- tm_map(docs,toSpace, "演講")
 docs <- tm_map(docs,toSpace, "格")
 docs <- tm_map(docs,toSpace, "一個")
 docs <- tm_map(docs,toSpace, "以")
@@ -155,43 +167,45 @@ docs <- tm_map(docs,toSpace, "還")
 docs <- tm_map(docs,toSpace, "如何")
 docs <- tm_map(docs,toSpace, "將")
 docs <- tm_map(docs,toSpace, "﹍")
+# 清除大小寫英文與數字
 docs <- tm_map(docs,toSpace, "[A-Za-z0-9]")
 #移除標點符號 (punctuation)
 #移除數字 (digits)、空白 (white space)
 docs <- tm_map(docs, removePunctuation)
 docs <- tm_map(docs, removeNumbers)
 docs <- tm_map(docs, stripWhitespace)
-
-# 語詞詞幹化(stemmization)
-# 以英文為例
-#https://zh.wikipedia.org/wiki/词干提取
-#library(SnowballC)
-#確保任何形式的單字只會轉換成相同詞性出現一次
-#docs <- tm_map(docs, stemDocument)
-##Stem words in a text document using Porter's stemming algorithm
-
 #在 worker() 內可以設定各種不同的全切分法模型與引用外部詞庫，在這裡直接使用
 #預設的全切分法的混合模型，與 jieba 自帶的詞庫。
+# 一般斷詞
 mixseg = worker()
 #適時的增加詞庫
+# segment <- c("陳菊","布里斯本","高雄","重劃區","合作會","後勁溪")
 segment <- c("低碳生活部落格","綠建築","節能","氣候變遷","電動車","台達電子","台達電子文教基金會","綠色能源")
 new_user_word(mixseg,segment)   #Add user word
-#有詞頻之後就可以去畫文字雲
+
+
+#斷詞  mixseg[groups]
 jieba_tokenizer=function(d){
   unlist(segment(d[[1]],mixseg))
 }
-
 seg = lapply(docs, jieba_tokenizer)
 #轉成文件
+#詞頻結果:
 freqFrame = as.data.frame(table(unlist(seg)))
 # 觀察出現由多到寡的文字
 ```
 
 
+```{r}
+library(knitr)
+kable(head(freqFrame[order(freqFrame$Freq, decreasing = TRUE),]))
+```
+
 繪製文字雲
 
 
 ```{r}
+#有詞頻之後就可以去畫文字雲
 #畫出文字雲
 library(extrafont)
 windowsFonts(TC=windowsFont("Heiti TC Light"))
@@ -202,6 +216,14 @@ wordcloud(freqFrame$Var1,freqFrame$Freq,
           rot.per=.2, colors=brewer.pal(11, "Paired")[c(1:17)],
           ordered.colors=FALSE,use.r.layout=FALSE,
           fixed.asp=TRUE,family="TC")
+
+
+library(wordcloud2)
+wordcloud2(freqFrame[freqFrame$Freq>10,], size = 0.8, fontFamily = "微軟雅黑",
+           color = "random-light", backgroundColor = "grey",
+           shape = "star"
+           )
+
 ```
 
 
