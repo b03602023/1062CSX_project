@@ -1,7 +1,7 @@
 ﻿## R_資料科學程式設計
 
 ### week_4
-
+>成果: https://b03602023.github.io/1062CSX_project/week_4/fb_API.html
 - week_4任務
 
     - https://ntu-csx-datascience.github.io/106-2RSampleCode/week_4/task_4/WordCloud-1.html    

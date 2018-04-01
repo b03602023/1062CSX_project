@@ -258,7 +258,6 @@ figPath = system.file("factory.png",package = "wordcloud2")
 wordcloud2(freqFrame[freqFrame$Freq>10,], size = 0.8, fontFamily = "微軟雅黑",
            color = "random-light", backgroundColor = "white",
            shape = "star"
-
            )
 
 
