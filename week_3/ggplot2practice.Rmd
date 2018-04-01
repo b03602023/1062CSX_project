@@ -2,6 +2,7 @@
 title: "week3_practice for ggplot and ggmap"
 author: 沈祐珍
 output: html_document
+css: style.css
 ---
 
 ```{r setup, include=FALSE}
@@ -56,14 +57,14 @@ kable(tail(my.data[order(my.data$hitRate, decreasing = TRUE), c(1,5,13,24) ]))
 
 ***
 
-```{r, echo=FALSE, message=FALSE}
+```{r, message=FALSE}
 library(plotly)
 library(ggmap)
 library(ggplot2)
 ```
 
-#####ggplot2 and ggmap
-```{r}
+#### 使用ggmap
+```{r, warning=FALSE}
 my.data$longitude<-as.numeric(my.data$longitude)
 my.data$latitude<-as.numeric(my.data$latitude)
 twmap <- get_map(location = c(121.53,25.08), zoom = 12, maptype = 'roadmap')
@@ -78,8 +79,7 @@ twmap0
 ```
 
 
-#### 使用ggmap
-```{r}
+```{r, warning=FALSE}
 my.data$longitude<-as.numeric(my.data$longitude)
 my.data$latitude<-as.numeric(my.data$latitude)
 twmap <- get_map(location = c(121.53,25.08), zoom = 12, maptype = 'roadmap')
@@ -94,7 +94,7 @@ twmap0
 ```
 
 
-```{r,echo=FALSE}
+```{r, warning=FALSE}
 twmap <- get_map(location = c(121.53,25.05), zoom = 13, maptype = 'roadmap')
 twmap0 <- ggmap(twmap)+  
   geom_point(data = my.data, 
@@ -107,7 +107,7 @@ twmap0
 ```
 
 
-```{r,echo=FALSE}
+```{r, warning=FALSE}
 twmap <- get_map(location = c(121.53,25.02), zoom = 15, maptype = 'roadmap')
 twmap0 <- ggmap(twmap)+   
   geom_point(data = my.data, 
@@ -120,7 +120,7 @@ twmap0
 ```
 
 #### 使用leaflet
-```{r, echo=FALSE}
+```{r, warning=FALSE}
 library(leaflet)
 # 可以在地圖上加入訊息方塊，其內容可以包涵任何的 HTML 程式碼：
 content <- paste(sep = "<br/>",
@@ -135,7 +135,7 @@ map1 <- leaflet(my.data) %>%
 map1
 ```
 
-```{r}
+```{r, warning=FALSE}
 map2 <- leaflet(my.data) %>%
   addTiles() %>%  # 加上預設的地圖資料
   addCircleMarkers(radius = rank(my.data$hitRate)/5, 
