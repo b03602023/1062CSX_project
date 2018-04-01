@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 想知道全台灣的獨立特色書店(非連鎖書店)在空間上主要聚集在哪裡。
 在尚未進行之前，知道大部分會聚集在台北，但是想要知道主要聚集在台北的哪裡。
 
-#####各書店的資訊：
+###各書店的資訊：
 顯示前6個和後6個
 
 ```{r}
@@ -39,7 +39,7 @@ kable(tail(my.data[ ,c(1,5,13,24)]))
 ***
 
 
-#####按點擊數由大至小排序各書店的點擊數：
+###按點擊數由大至小排序各書店的點擊數：
 顯示前6個和後6個
 
 ***
@@ -63,7 +63,7 @@ library(ggmap)
 library(ggplot2)
 ```
 
-#### 使用ggmap
+### 使用ggmap
 ```{r, warning=FALSE}
 my.data$longitude<-as.numeric(my.data$longitude)
 my.data$latitude<-as.numeric(my.data$latitude)
@@ -119,7 +119,7 @@ twmap0 <- ggmap(twmap)+
 twmap0
 ```
 
-#### 使用leaflet
+### 使用leaflet
 ```{r, warning=FALSE}
 library(leaflet)
 # 可以在地圖上加入訊息方塊，其內容可以包涵任何的 HTML 程式碼：
