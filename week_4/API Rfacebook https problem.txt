@@ -1,0 +1,14 @@
+Insecure Login Blocked: You can't get an access token or log in to this app from an insecure page. Try re-loading the page as https://
+
+https://localhost.example.com:8000/ 
+
+http://localhost:1410/
+https://localhost.example.com:1410/ 
+
+http://localhost:1410/?error_code=1349187&error_message=Insecure+Login+Blocked%3A+You+can%27t+get+an+access+token+or+log+in+to+this+app+from+an+insecure+page.+Try+re-loading+the+page+as+https%3A%2F%2F&state=YW5IGCTXlg#_=_
+
+
+For local development
+If you・re developing a web app, it・s useful to run a local web server like Apache or Nginx, and access it via http://localhost:8000/ in your web browser. However, web browsers behave in subtly different ways on HTTP vs HTTPS pages. The main difference: On an HTTPS page, any requests to load JavaScript from an HTTP URL will be blocked. So if you・re developing locally using HTTP, you might add a script tag that works fine on your development machine, but breaks when you deploy to your HTTPS production site. To catch this kind of problem, it・s useful to set up HTTPS on your local web server. However, you don・t want to see certificate warnings all the time. How do you get the green lock locally?
+
+The best option: Generate your own certificate, either self-signed or signed by a local root, and trust it in your operating system・s trust store. Then use that certificate in your local web server. See below for details.

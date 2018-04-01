@@ -9,7 +9,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## 獨立特色書店的點擊數與其空間關係圖
-
+想知道全台灣的獨立特色書店(非連鎖書店)在空間上主要聚集在哪裡。
+在尚未進行之前，知道大部分會聚集在台北，但是想要知道主要聚集在台北的哪裡。
 
 #####各書店的資訊：
 顯示前6個和後6個
@@ -55,15 +56,34 @@ kable(tail(my.data[order(my.data$hitRate, decreasing = TRUE), c(1,5,13,24) ]))
 
 ***
 
-#####ggplot2 and ggmap
-
-```{r}
+```{r, echo=FALSE, message=FALSE}
 library(plotly)
 library(ggmap)
+library(ggplot2)
+```
+
+#####ggplot2 and ggmap
+```{r}
 my.data$longitude<-as.numeric(my.data$longitude)
 my.data$latitude<-as.numeric(my.data$latitude)
 twmap <- get_map(location = c(121.53,25.08), zoom = 12, maptype = 'roadmap')
-twmap0 <- ggmap(twmap, extent = 'device')+    #extent = 'device' 滿版
+twmap0 <- ggmap(twmap)+   
+  geom_point(data = my.data, 
+             aes(x = longitude, y = latitude, colour = hitRate), 
+             size = 9) +
+  scale_color_continuous(low = "yellow", high = "black")+
+  guides(size = FALSE)
+
+twmap0
+```
+
+
+#### 使用ggmap
+```{r}
+my.data$longitude<-as.numeric(my.data$longitude)
+my.data$latitude<-as.numeric(my.data$latitude)
+twmap <- get_map(location = c(121.53,25.08), zoom = 12, maptype = 'roadmap')
+twmap0 <- ggmap(twmap)+    
   geom_point(data = my.data, 
              aes(x = longitude, y = latitude, colour = hitRate), 
              size = 9) +
@@ -76,7 +96,7 @@ twmap0
 
 ```{r,echo=FALSE}
 twmap <- get_map(location = c(121.53,25.05), zoom = 13, maptype = 'roadmap')
-twmap0 <- ggmap(twmap, extent = 'device')+    #extent = 'device' 滿版
+twmap0 <- ggmap(twmap)+  
   geom_point(data = my.data, 
              aes(x = longitude, y = latitude, colour = hitRate), 
              size = 9) +
@@ -89,7 +109,7 @@ twmap0
 
 ```{r,echo=FALSE}
 twmap <- get_map(location = c(121.53,25.02), zoom = 15, maptype = 'roadmap')
-twmap0 <- ggmap(twmap, extent = 'device')+    #extent = 'device' 滿版
+twmap0 <- ggmap(twmap)+   
   geom_point(data = my.data, 
              aes(x = longitude, y = latitude, colour = hitRate), 
              size = 5) +
@@ -99,5 +119,35 @@ twmap0 <- ggmap(twmap, extent = 'device')+    #extent = 'device' 滿版
 twmap0
 ```
 
+#### 使用leaflet
+```{r, echo=FALSE}
+library(leaflet)
+# 可以在地圖上加入訊息方塊，其內容可以包涵任何的 HTML 程式碼：
+content <- paste(sep = "<br/>",
+                 paste("書店名:",my.data$name),
+                 paste("hitRate: ",my.data$hitRate)
+                 )
+map1 <- leaflet(my.data) %>%
+  addTiles() %>%  # 加上預設的地圖資料
+  addCircleMarkers(radius = rank(my.data$hitRate)/5, 
+                   color = "red", 
+                   popup = content)
+map1
+```
+
+```{r}
+map2 <- leaflet(my.data) %>%
+  addTiles() %>%  # 加上預設的地圖資料
+  addCircleMarkers(radius = rank(my.data$hitRate)/5, 
+                   color = "red", 
+                   popup = content,
+                   clusterOptions = markerClusterOptions()
+                   )
+
+map2  # 繪製地圖
+```
+
+##### 結論
+在台北，獨立特色書店主要聚集於大安區，尤其是台大附近。應該是因為大安區屬於文教區。且相對於ggmap，leaflet可以更自由地呈現資料與空間的關係。
 
 `資料來源`：政府資料開放平台--文化部收錄獨立特色書店的資料

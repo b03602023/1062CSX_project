@@ -87,6 +87,7 @@ library(wordcloud)
 #進行文本清理
 #par(family='STKaiti')  #字體設定；讓文字顯示成中文
 #par(family=("Heiti TC Light"))
+# 讀入wd內的資料夾中所有 *.txt 文章
 filenames <- list.files(getwd(), pattern="*.txt")  #pattern: an optional regular expression. Only file names which match the regular expression will be returned.
 files <- lapply(filenames, readLines)  #Read some or all text lines from a connection.
 docs <- Corpus(VectorSource(files))  #Representing and computing on corpora(語料庫).
@@ -191,6 +192,7 @@ docs <- tm_map(docs, stripWhitespace)
 
 #在 worker() 內可以設定各種不同的全切分法模型與引用外部詞庫，在這裡直接使用
 #預設的全切分法的混合模型，與 jieba 自帶的詞庫。
+# 一般斷詞
 mixseg = worker()
 #適時的增加詞庫
 # segment <- c("陳菊","布里斯本","高雄","重劃區","合作會","後勁溪")
