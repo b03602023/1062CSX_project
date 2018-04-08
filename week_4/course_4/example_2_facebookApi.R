@@ -84,6 +84,7 @@ library(jiebaRD)
 library(jiebaR)      #斷詞用
 library(RColorBrewer)
 library(wordcloud)
+
 #進行文本清理
 par(family='STKaiti')  #字體設定；讓文字顯示成中文
 #將R環境設定成中文
@@ -94,6 +95,8 @@ par(family='STKaiti')  #字體設定；讓文字顯示成中文
 filenames <- list.files(getwd(), pattern="*.txt")  #pattern: an optional regular expression. Only file names which match the regular expression will be returned.
 files <- lapply(filenames, readLines)  #Read some or all text lines from a connection.
 docs <- Corpus(VectorSource(files))  #Representing and computing on corpora(語料庫).
+
+
 #VectorSource: create a vector source
  # A vector source interprets each element of the vector x 
  # as a document.
@@ -188,9 +191,7 @@ docs <- tm_map(docs, removePunctuation)
 docs <- tm_map(docs, removeNumbers)
 docs <- tm_map(docs, stripWhitespace)
 
-#
-tdm <- TermDocumentMatrix(docs)
-inspect(tdm[1:10, 1:10])
+
 
 # 語詞詞幹化(stemmization)
 # 以英文為例

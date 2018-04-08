@@ -1,0 +1,110 @@
+---
+title: "task_5"
+output: html_document
+author: "生工四-沈祐珍"
+---
+
+分析低碳生活部落格從2018/01/01到2018/03/22的貼文
+
+### 讀取資料、建立語料庫
+
+```{r}
+# week_5 task_5 TF-IDF for week_4 低碳生活部落格
+library(NLP)
+library(tm)
+library(jiebaRD)
+library(jiebaR)      #斷詞用
+library(RColorBrewer)
+library(wordcloud)
+library(readtext)
+library(tmcn)   #segmentCN
+files <- readtext("*.txt", encoding = "big5")
+docs <- Corpus(VectorSource(files$text))  #Representing and computing on corpora(語料庫).
+
+toSpace <- content_transformer(function(x, pattern) {
+  return (gsub(pattern, " ", x))
+}     
+)
+docs <- tm_map(docs,toSpace,"V1")
+docs <- tm_map(docs,toSpace,"\n")
+docs <- tm_map(docs,toSpace, "1")
+docs <- tm_map(docs,toSpace, "[A-Za-z0-9]")
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, stripWhitespace)
+```
+
+#### 斷詞
+
+```{r}
+mixseg = worker()
+#適時的增加詞庫
+segment <- c("低碳生活部落格","綠建築","節能","氣候變遷","電動車","台達電子","台達電子文教基金會","綠色能源","潮間帶")
+new_user_word(mixseg,segment)   #Add user word
+
+
+#斷詞  mixseg[groups]
+jieba_tokenizer=function(d){
+  unlist(segment(d[[1]],mixseg))
+}
+seg = lapply(docs, jieba_tokenizer)
+
+#轉成文件
+```
+
+
+### 詞頻結果:
+
+```{r}
+library(knitr)
+freqFrame = as.data.frame(table(unlist(seg)))
+seg <- Corpus(VectorSource(seg))
+tdm <- TermDocumentMatrix(seg, control = list(wordLengths = c(1,10)))
+# 可用matrix呈現: as.matrix(tdm)
+kable(inspect(tdm))
+
+```
+
+### 計算TF-IDF
+
+```{r}
+#-------caculate  TF-IDF ----------
+library(Matrix)   #nnzero
+tf <- as.matrix(tdm)/apply(tdm, 2, sum)   #term frequency: the number of words in every document
+s_tf <- apply(tf, 1, sum)
+idf <- log10(ncol(tdm)/apply(tdm, 1, nnzero))
+tfidf <- tf*idf       #TF-IDF
+#write.csv(tfidf, "show.csv")
+
+
+s_tfidf <- apply(tfidf, 1, sum)
+all <- cbind(s_tf, idf, s_tfidf)
+colnames(all) <- c("TF", "IDF", "TF-IDF")
+kable(rbind(all[1:10,], all[(nrow(all)-15):nrow(all),]))
+
+s_tfidf <- s_tfidf[order(s_tfidf, decreasing = TRUE)]
+tfidf <- as.data.frame(tfidf)
+
+
+
+```
+
+### 視覺化
+
+```{r}
+#------visualize----
+library(ggplot2)
+t <- 0.28
+reorder_size <- function(x) { factor(x, levels = names(sort(table(x)))) }
+names(s_tfidf) <- reorder_size(names(s_tfidf))
+
+p <- ggplot(tfidf[s_tfidf>t,], aes(reorder_size(names(s_tfidf[s_tfidf>t])), s_tfidf[s_tfidf>t]))
+p + geom_bar(stat = "identity")+ 
+  theme(axis.text.y = element_text(angle = 60, hjust = 1)
+        )+
+  coord_flip()+
+  ylab("TF-IDF") + xlab("字詞")
+
+
+```
+
