@@ -1,0 +1,262 @@
+---
+title: "project_1"
+output: html_document
+---
+# 各網購網站販賣女裝的特色比較
+# 各網購網站販賣男裝的特色比較
+想要知道各知名網購網站的女裝和男裝的當季流行款式以及其特色比較!
+
+2018/04/10 進度：
+針對PCHOME和UNIQULO網站關鍵字女裝和男裝搜尋的結果進行比較
+1. 資料蒐集、清洗、斷詞
+2. 利用TF-IDF和文字雲進行各網購網站販賣的衣服特色的關鍵字比較
+
+
+
+### PCHOME:爬取資料
+```{r}
+library(httr)
+pageno <- 1:10    #搜尋頁數
+g_url <- paste0("https://ecshweb.pchome.com.tw/search/v3.3/all/results?q=%E5%A5%B3%E8%A3%9D&page=", pageno, "&sort=rnk/dc")
+b_url <- paste0("https://ecshweb.pchome.com.tw/search/v3.3/all/results?q=%E7%94%B7%E8%A3%9D&page=", pageno, "&sort=rnk/dc")
+#url = "https://ecshweb.pchome.com.tw/search/v3.3/all/results?q=%E5%A5%B3&page=1&sort=rnk/dc"
+g_prods = character()
+b_prods = character()
+getcontent <- function(url, prods){
+  for(i in 1:length(pageno)){
+    res = GET(url[i])
+    res_json = httr::content(res)
+    results <- data.frame(do.call(rbind,res_json$prods))
+    prods[((pageno[i]-1)*20+1):(pageno[i]*20)] <- unlist(results$name)
+  }
+  return(prods)
+}
+g_prods <- c(g_prods, getcontent(g_url, g_prods))
+Sys.sleep(60)
+b_prods <- c(b_prods, getcontent(b_url, b_prods))
+```
+
+
+### PCHOME:資料清洗、斷詞
+```{r}
+#-------clean data--------
+processdata <- function(prods){
+  library(NLP)
+  library(tm)
+  library(jiebaRD)
+  library(jiebaR)      #斷詞用
+  library(RColorBrewer)
+  library(wordcloud)
+  library(tmcn)   #segmentCN
+  docs <- Corpus(VectorSource(prods))
+  
+  toSpace <- content_transformer(function(x, pattern) {
+    return (gsub(pattern, " ", x))
+  }     
+  )
+  docs <- tm_map(docs,toSpace,"V1")
+  docs <- tm_map(docs,toSpace,"\n")
+  docs <- tm_map(docs,toSpace, "1")
+  # 清除大小寫英文與數字
+  docs <- tm_map(docs,toSpace, "[A-Za-z0-9]")
+  #移除標點符號 (punctuation)
+  #移除數字 (digits)、空白 (white space)
+  docs <- tm_map(docs, removePunctuation)
+  docs <- tm_map(docs, removeNumbers)
+  docs <- tm_map(docs, stripWhitespace)
+  
+  
+  #-------斷詞--------
+  mixseg = worker()
+  #new_user_word(mixseg,segment)   #Add user word
+  
+  
+  #斷詞  mixseg[groups]
+  jieba_tokenizer=function(d){
+    unlist(segment(d[[1]],mixseg))
+  }
+  #1
+  seg = lapply(docs, jieba_tokenizer)
+  #2
+  seg = lapply(docs, segmentCN)
+  #seg = lapply(seg, strsplit, " ")
+  return(seg)
+}
+g_seg <- processdata(g_prods)
+b_seg <- processdata(b_prods)
+
+
+
+g_freqFrame = as.data.frame(table(unlist(g_seg)))
+b_freqFrame = as.data.frame(table(unlist(b_seg)))
+
+
+```
+
+
+
+### UNIQLO: 爬取資料
+```{r}
+# 
+library(rvest)
+page <- 0:12
+p <- 48*(page)
+
+u_getrvest <- function(url){
+  res <- read_html(url)
+  raw.titles <- res %>% html_nodes("div.unit .info .name")
+  u_prods <- raw.titles %>% html_node("a") %>% html_attr('title')
+  
+  return(u_prods)
+}
+
+ug_url <- paste0("http://www.uniqlo.com/tw/store/search?qtext=%E5%A5%B3%E8%A3%9D&qbrand=10&qclv1=&qclv25=&qclv2=&qrange=&qcolor=&qsize=&qnew=&qdiscount=&qlimit=&qmulti=&qonline=&qspsize=&qstart=", p,"&sort=goods_disp_priority")
+
+ug_prods <- mapply(u_getrvest, ug_url)
+colnames(ug_prods) <- page+1
+#raw.prices <- res %>% html_nodes("dd.price") %>% html_text
+#raw.prices <- as.character(raw.prices)
+#gsub("NT$", "", raw.prices)
+
+
+```
+
+### UNIQLO: 資料清洗、斷詞
+```{r}
+ug_seg <- processdata(as.character(ug_prods))
+ug_freqFrame = as.data.frame(table(unlist(ug_seg)))
+
+
+ub_url <- paste0("http://www.uniqlo.com/tw/store/search?qtext=%E7%94%B7%E8%A3%9D&qbrand=10&qclv1=&qclv25=&qclv2=&qrange=&qcolor=&qsize=&qnew=&qdiscount=&qlimit=&qmulti=&qonline=&qspsize=&qstart=", p,"&sort=goods_disp_priority")
+
+ub_prods <- mapply(u_getrvest, ub_url)
+colnames(ub_prods) <- page+1
+#raw.prices <- res %>% html_nodes("dd.price") %>% html_text
+#raw.prices <- as.character(raw.prices)
+#gsub("NT$", "", raw.prices)
+
+ub_seg <- processdata(as.character(ub_prods))
+ub_freqFrame = as.data.frame(table(unlist(ub_seg)))
+
+
+```
+
+## 文字雲和TF-IDF 呈現
+```{r}
+library(Matrix)   #nnzero
+library(knitr)
+```
+
+### PCHOME女裝
+```{r}
+library(wordcloud2)
+#wordcloud2(g_freqFrame[(g_freqFrame$Freq>tres)&(g_freqFrame$Freq!=max(g_freqFrame$Freq)),], fontFamily = "微軟雅黑",color = "random-light", backgroundColor = "grey", size = 1  )
+windowsFonts(TC=windowsFont("Heiti TC Light"))
+wordcloud(g_freqFrame$Var1,g_freqFrame$Freq,
+          scale=c(10,1),
+          min.freq=5,max.words=50,
+          random.order=FALSE,random.color=FALSE, 
+          rot.per=.2, colors=brewer.pal(11, "Paired")[c(1:25)],
+          ordered.colors=FALSE,use.r.layout=FALSE,
+          fixed.asp=TRUE,family="TC")
+
+g_seg <- Corpus(VectorSource(g_seg))
+g_tdm <- TermDocumentMatrix(g_seg, control = list(wordLengths = c(1,10)))
+
+g_tf <- as.matrix(g_tdm)/apply(g_tdm, 2, sum)   #term frequency: the number of words in every document
+g_idf <- log10(ncol(g_tdm)/apply(g_tdm, 1, nnzero))
+g_tfidf <- g_tf*g_idf       #TF-IDF
+g_tfidf <- apply(g_tfidf, 1, sum)
+kable(head(g_tfidf[order(g_tfidf, decreasing = TRUE)], n = 15L))       #TF-IDF
+
+
+```
+
+
+## PCHOME男裝
+```{r}
+windowsFonts(TC=windowsFont("Heiti TC Light"))
+wordcloud(b_freqFrame$Var1,b_freqFrame$Freq,
+          scale=c(10,1),
+          min.freq=5,max.words=50,
+          random.order=FALSE,random.color=FALSE, 
+          rot.per=.2, colors=brewer.pal(11, "Paired")[c(1:25)],
+          ordered.colors=FALSE,use.r.layout=FALSE,
+          fixed.asp=TRUE,family="TC")
+
+
+b_seg <- Corpus(VectorSource(b_seg))
+b_tdm <- TermDocumentMatrix(b_seg, control = list(wordLengths = c(1,10)))
+
+b_tf <- as.matrix(b_tdm)/apply(b_tdm, 2, sum)   #term frequency: the number of words in every document
+b_idf <- log10(ncol(b_tdm)/apply(b_tdm, 1, nnzero))
+b_tfidf <- b_tf*b_idf       #TF-IDF
+b_tfidf <- apply(b_tfidf, 1, sum)
+kable(head(b_tfidf[order(b_tfidf, decreasing = TRUE)], n = 15L))       #TF-IDF
+
+
+```
+
+
+### UNIQULO女裝
+```{r}
+
+windowsFonts(TC=windowsFont("Heiti TC Light"))
+wordcloud(ug_freqFrame$Var1,ug_freqFrame$Freq,
+          scale=c(10,1),
+          min.freq=5,max.words=50,
+          random.order=FALSE,random.color=FALSE, 
+          rot.per=.2, colors=brewer.pal(11, "Paired")[c(1:25)],
+          ordered.colors=FALSE,use.r.layout=FALSE,
+          fixed.asp=TRUE,family="TC")
+
+ug_seg <- Corpus(VectorSource(ug_seg))
+ug_tdm <- TermDocumentMatrix(ug_seg, control = list(wordLengths = c(1,10)))
+
+
+ug_tf <- as.matrix(ug_tdm)/apply(ug_tdm, 2, sum)   #term frequency: the number of words in every document
+ug_idf <- log10(ncol(ug_tdm)/apply(ug_tdm, 1, nnzero))
+ug_tfidf <- ug_tf*ug_idf       #TF-IDF
+ug_tfidf <- apply(ug_tfidf, 1, sum)
+kable(head(ug_tfidf[order(ug_tfidf, decreasing = TRUE)], n = 15L)) 
+
+```
+
+### UNIQULO男裝
+```{r}
+
+windowsFonts(TC=windowsFont("Heiti TC Light"))
+wordcloud(ub_freqFrame$Var1,ub_freqFrame$Freq,
+          scale=c(10,1),
+          min.freq=5,max.words=50,
+          random.order=FALSE,random.color=FALSE, 
+          rot.per=.2, colors=brewer.pal(11, "Paired")[c(1:25)],
+          ordered.colors=FALSE,use.r.layout=FALSE,
+          fixed.asp=TRUE,family="TC")
+
+ub_seg <- Corpus(VectorSource(ub_seg))
+ub_tdm <- TermDocumentMatrix(ub_seg, control = list(wordLengths = c(1,10)))
+
+
+ub_tf <- as.matrix(ub_tdm)/apply(ub_tdm, 2, sum)   #term frequency: the number of words in every document
+ub_idf <- log10(ncol(ub_tdm)/apply(ub_tdm, 1, nnzero))
+ub_tfidf <- ub_tf*ub_idf       #TF-IDF
+ub_tfidf <- apply(ub_tfidf, 1, sum)
+kable(head(ub_tfidf[order(ub_tfidf, decreasing = TRUE)], n = 15L))   
+
+```
+
+
+
+
+```{r}
+
+# 可用matrix呈現: as.matrix(tdm)
+#-------caculate  TF-IDF ----------
+      #TF-IDF
+
+    #TF-IDF
+
+
+
+```

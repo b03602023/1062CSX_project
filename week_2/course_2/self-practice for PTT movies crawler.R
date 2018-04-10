@@ -14,6 +14,7 @@ url <- "https://www.ptt.cc/bbs/movie/index.html"
 res <- read_html(url)
 
 # Parse the content and extract the titles
+# . for class; # for ID 
 raw.titles <- res %>% html_nodes("div.title")
 
 # Extract link

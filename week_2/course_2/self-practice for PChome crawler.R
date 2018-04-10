@@ -1,7 +1,7 @@
 
 library(httr)
 
-url <- "http://ecshweb.pchome.com.tw/search/v3.3/all/results?q=sony&page=1&sort=rnk/dc"
+url <- "https://ecshweb.pchome.com.tw/search/v3.3/all/results?q=%E5%A5%B3&page=1&sort=rnk/dc"
 # 傳送get的請求(request)，取得網頁資訊response
 # get response
 res = GET(url)
@@ -9,7 +9,7 @@ res = GET(url)
 # status: 200表示正常,404表示找不到網頁
 # 查看content-type
 
-res_json = content(res)
+res_json = httr::content(res)
 do.call(rbind,res_json$prods)
 View(data.frame(do.call(rbind,res_json$prods)))
 

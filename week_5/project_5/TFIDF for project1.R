@@ -2,13 +2,13 @@
 rm(list=ls(all.names=TRUE))
 library(httr)
 prefex <- "https://graph.facebook.com/v2.10/"
-token <- "EAACEdEose0cBAK7w4hguBSuTaxvO60aPgXJGZBS4DIWmExvNqPRBP2goH0XjXtCZBJIiX4VGwJvb8QDL806D4owmJJs83FPzNE8ZBP9DR79IRhsG1HTZBQICRaC8OL8ZBGj3P4Yf0To1w4wmFdM5lEyas2vKdTHwE9UmD4G5QVhIModf91JCcjzMX9EfqOXsZD"
+token <- "EAACEdEose0cBABh9UHkbum4Bu2lcd7gZBilEFMofndeV8PNJXkWZCzfFg8GcaukItTvmE9EElr8rWKTyQpbc2DDEjgZAbW6Da0rTxBQ4MSzjSrzagkNT3xJWgnG9iV6ZA2A5ZCzETc3xZCRbZAKqZC0x9uohQTD41n3ZA4M8R2yuNmZBwKwc0tseCYDkmijWLfBL4ZD"
 number <- 1      #只爬入一篇貼文post
 
 # 101501458062251287為朱立倫的id
 # 136845026417486 為柯文哲的id
 # 175549807657 為低碳生活部落客的id
-# 限定從2017-03-11到2018-03-22 時間內最近的一篇貼文
+# 限定從2012-01-01到2018-04-07 時間內的貼文
 target <- "10150145806225128/posts?limit="
 control <- "&until=2018-04-07&since=2018-01-01"
 control <- c(control, paste0("&until=",2017:2012,"-12-31","&since=",2017:2012,"-01-01"))

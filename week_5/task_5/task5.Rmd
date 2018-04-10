@@ -70,17 +70,15 @@ kable(inspect(tdm))
 ```{r}
 #-------caculate  TF-IDF ----------
 library(Matrix)   #nnzero
+library(knitr)
 tf <- as.matrix(tdm)/apply(tdm, 2, sum)   #term frequency: the number of words in every document
-s_tf <- apply(tf, 1, sum)
+
 idf <- log10(ncol(tdm)/apply(tdm, 1, nnzero))
 tfidf <- tf*idf       #TF-IDF
-#write.csv(tfidf, "show.csv")
+s_tfidf = apply(tfidf, 1, sum)
+m_tfidf = tfidf[-which(s_tfidf == 0),]
 
-
-s_tfidf <- apply(tfidf, 1, sum)
-all <- cbind(s_tf, idf, s_tfidf)
-colnames(all) <- c("TF", "IDF", "TF-IDF")
-kable(rbind(all[1:10,], all[(nrow(all)-15):nrow(all),]))
+knitr::kable(rbind(m_tfidf[1:10,], m_tfidf[(nrow(m_tfidf)-15):nrow(m_tfidf),]))
 
 s_tfidf <- s_tfidf[order(s_tfidf, decreasing = TRUE)]
 tfidf <- as.data.frame(tfidf)
@@ -95,10 +93,9 @@ tfidf <- as.data.frame(tfidf)
 #------visualize----
 library(ggplot2)
 t <- 0.28
-reorder_size <- function(x) { factor(x, levels = names(sort(table(x)))) }
-names(s_tfidf) <- reorder_size(names(s_tfidf))
 
-p <- ggplot(tfidf[s_tfidf>t,], aes(reorder_size(names(s_tfidf[s_tfidf>t])), s_tfidf[s_tfidf>t]))
+
+p <- ggplot(tfidf[s_tfidf>t,], aes(names(s_tfidf[s_tfidf>t]), s_tfidf[s_tfidf>t]))
 p + geom_bar(stat = "identity")+ 
   theme(axis.text.y = element_text(angle = 60, hjust = 1)
         )+
