@@ -245,18 +245,7 @@ ub_tfidf <- apply(ub_tfidf, 1, sum)
 kable(head(ub_tfidf[order(ub_tfidf, decreasing = TRUE)], n = 15L))   
 
 ```
+### 結果討論
+PCHOME 女裝特色較重視休閒、純棉、圓領、涼爽
+UNIQULO 女裝特色較重視印花、棉質、彈性、條紋
 
-
-
-
-```{r}
-
-# 可用matrix呈現: as.matrix(tdm)
-#-------caculate  TF-IDF ----------
-      #TF-IDF
-
-    #TF-IDF
-
-
-
-```

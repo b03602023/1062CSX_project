@@ -1,7 +1,0 @@
-"V1"
-"1" "2015-04-16T09:10:01+0000"
-"2" "跟著YouBike去旅行，乘著YouBike去通勤。今天，新北市公共自行車站設置已突破百站，愈來愈多的站點與車輛，更方便民眾騎著YouBike在城市裡穿梭。明年中達300站的目標，我們繼續努力。
-
-YouBike 站點查詢 http://ntpc.youbike.com.tw/cht/f12.php
-YouBike 輕旅行 http://ntpc.youbike.com.tw/cht/index.php"
-"3" "10150145806225128_10155458332310128"
