@@ -4,6 +4,7 @@
 3. Try to analyze the places where traffic accidents happen most but got stuck because of lacking information
 4. Try to analyze the features of clothes from some famous on-line shopping website (progressing)
 
+[Project_1](https://b03602023.github.io/1062CSX_project/week_5/project_5/project_1.html)
 
 Reference:
    [text mining with R](https://www.tidytextmining.com/)
