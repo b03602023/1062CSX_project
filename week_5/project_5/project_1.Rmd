@@ -246,6 +246,11 @@ kable(head(ub_tfidf[order(ub_tfidf, decreasing = TRUE)], n = 15L))
 
 ```
 ### 結果討論
-PCHOME 女裝特色較重視休閒、純棉、圓領、涼爽
-UNIQULO 女裝特色較重視印花、棉質、彈性、條紋
+PCHOME 女裝特色較著重休閒、純棉、圓領、涼爽
+UNIQULO 女裝特色較著重印花、棉質、彈性、條紋
+
+PCHOME 女裝特色較著重簡約、印花、彈力、休閒、素色
+UNIQULO 男裝特色較著重印花、棉質、彈性、條紋、精紡
+
+
 
