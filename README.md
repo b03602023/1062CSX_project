@@ -24,12 +24,12 @@
 * Collect the raw text from FB API
 * Learn how to clean and process the raw text and ouput the wordcloud
 
-    [result](https://b03602023.github.io/1062CSX_project//week_4/task_4/fb_API.html)
+    [result](https://b03602023.github.io/1062CSX_project/week_4/task_4/fb_API.html)
 
 ## week 5
 * Learn using leaflet package to create interactive maps [(used in task 3)]((https://b03602023.github.io/1062CSX_project/week_3/ggplot2practice.html))
 
-
+[Project_1](https://b03602023.github.io/1062CSX_project/week_5/project_1/project_1.html)
 
 
 
