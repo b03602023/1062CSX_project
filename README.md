@@ -12,7 +12,7 @@
 * Learn using R to collect raw text by the "rvest" package
 * Parse PChome
 
-    [result](https://b03602023.github.io/1062CSX_project/week_2/task_2/Rcrawler_PChome.html)
+    [result](https://b03602023.github.io/1062CSX_project/week_2/task_2/Task2_Rcrawler_PChome.html)
 
 ## week 3
 * Learn the concept of ggplot, plotly and ggmap
