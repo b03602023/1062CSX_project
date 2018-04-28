@@ -29,8 +29,13 @@
 ## week 5
 * Learn using leaflet package to create interactive maps [(used in task 3)]((https://b03602023.github.io/1062CSX_project/week_3/ggplot2practice.html))
 
+* Use TF-IDF and wordcloud to analyze types of clothing styles from different online shopping website
 [Project_1](https://b03602023.github.io/1062CSX_project/week_5/project_1/project_1.html)
 
+## week 6
+
+## week 7
+* Learn how to use the linear regression and svm for prediction
 
 
 

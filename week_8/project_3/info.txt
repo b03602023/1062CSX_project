@@ -1,0 +1,2 @@
+[介紹的titanic](https://www.kaggle.com/erikbruin/titanic-2nd-degree-families-and-majority-voting/notebook)
+[老師推薦的titanic](https://www.kaggle.com/tiagoantao/titanic-exploratory-analysis-with-pca/notebook)
