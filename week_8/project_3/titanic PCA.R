@@ -5,11 +5,20 @@ data <- data[1:1000,]
 sapply(data, function(x) {sum(is.na(x))})
 data <- subset(data, select = -body)
 data <- data[is.na(data$age)!=TRUE,]
+data$fs <- as.integer(data$parch)+as.integer(data$sibsp)+1
+
+data$boat <- as.character(data$boat)
+data$survived <- as.factor(data$survived)
+data$pclass <- as.factor(data$pclass)
+data$sibsp <- as.factor(data$sibsp)
+data$parch <- as.factor(data$parch)
+data$fs <- as.factor(data$fs)
+summary(data)
 
 # EDA
 library(ggplot2)
 library(scales)
-
+library(gridExtra)
 
 ggplot(data, aes(x = survived, fill = survived)) +
   geom_bar(stat='count', position='dodge') +
@@ -90,11 +99,16 @@ grid.arrange(b1,b2, nrow=1)
 #-----sibsp-----------
 #------男性存活比率都偏低，
 #----女性的中若手足和配偶數量加起來不超過3，存活機率很高，幾乎都有達到80%
+#活下且有兄弟姊妹親人是女性的比例是
+length(data$age[data$survived==1 & data$sibsp!=0 & data$parch!=0& data$sex=="female"])/length(data$age[data$survived==1 & data$sibsp!=0 & data$parch!=0])
+length(data$age[data$survived==0 & data$sibsp!=0 & data$parch!=0& data$sex=="male"])/length(data$age[data$survived==0 & data$sibsp!=0 & data$parch!=0])
+
+# total statistics
 b1 <- ggplot(data, aes(x = sibsp, fill = sibsp)) +
   geom_bar(stat='count', position='dodge') +
   geom_label(stat='count',aes(label=..count..), size=5) +
   theme_grey(base_size = 15)
-
+# statistics showing survival with sex difference
 b2 <-
   ggplot(data, aes(x = sibsp, fill = survived)) +
   geom_bar(stat='count', position='dodge') +
@@ -102,25 +116,30 @@ b2 <-
   facet_grid(.~sex) +
   theme_grey(base_size = 15)
 
-
+# total statistics with sex difference
 b3 <-
   ggplot(data, aes(x = sibsp, fill = sex)) +
   geom_bar(stat='count', position = 'dodge') +
   geom_label(stat = 'count', aes(label =..count..), size = 5, 
              position=position_dodge(0.9))+
   theme_grey(base_size = 15)
-  
+
+# percent statistics showing survival with sex difference
 b4 <- 
   ggplot(data, aes(x = sibsp, fill = survived)) +
   geom_bar(stat='count', position='fill') +
-  labs(x = 'pclass', y= "Percent") + facet_grid(.~sex) +
+  labs(x = 'sibsp', y= "Percent") + facet_grid(.~sex) +
   theme(legend.position="none") + theme_grey()
 
 grid.arrange(b1,b2,b3,b4, nrow=2)
 
 #----- parch-------------
+#-----男性生存比例偏低，但若在sibsp為1和2之間的生存率有接近0.5
+#------女性的生存率在sibsp為5以前都很高。
+# 注意: parch為parch為2以前的樣本量較多。
 b1 <- ggplot(data, aes(x = parch, fill = parch)) +
   geom_bar(stat='count', position='dodge') +
+  facet_grid(.~sex) +
   geom_label(stat='count',aes(label=..count..), size=8) +
   theme_grey(base_size = 15)
 
@@ -128,8 +147,49 @@ b2 <-
   ggplot(data, aes(x = parch, fill = survived)) +
   geom_bar(stat='count', position='dodge') +
   geom_label(stat='count',aes(label=..count..), size=8, position=position_dodge(0.9)) +
+  facet_grid(.~sex) +
   theme_grey(base_size = 15)
+
+ggplot(data, aes(x = parch, fill = survived)) +
+  geom_bar(stat='count', position='fill') +
+  labs(x = 'parch', y= "Percent") + facet_grid(.~sex) +
+  theme(legend.position="none") + theme_grey()
+
+
 grid.arrange(b1,b2, nrow=1)
+
+# ------- family size -------
+# -----family size為4的男生存活率最高，大概都是接近0.5
+# -----family size為4的女生存活率也最高，
+# total statistics
+b1 <- ggplot(data, aes(x = fs, fill = fs)) +
+  geom_bar(stat='count', position='dodge') +
+  geom_label(stat='count',aes(label=..count..), size=5) +
+  theme_grey(base_size = 15)
+# statistics showing survival with sex difference
+b2 <-
+  ggplot(data, aes(x = fs, fill = survived)) +
+  geom_bar(stat='count', position='dodge') +
+  geom_label(stat='count',aes(label=..count..), size=5, position=position_dodge(0.9)) +
+  facet_grid(.~sex) +
+  theme_grey(base_size = 15)
+
+# total statistics with sex difference
+b3 <-
+  ggplot(data, aes(x = fs, fill = sex)) +
+  geom_bar(stat='count', position = 'dodge') +
+  geom_label(stat = 'count', aes(label =..count..), size = 5, 
+             position=position_dodge(0.9))+
+  theme_grey(base_size = 15)
+
+# percent statistics showing survival with sex difference
+b4 <- 
+  ggplot(data, aes(x = fs, fill = survived)) +
+  geom_bar(stat='count', position='fill') +
+  labs(x = 'sibsp', y= "Percent") + facet_grid(.~sex) +
+  theme(legend.position="none") + theme_grey()
+
+grid.arrange(b1,b2,b3,b4, nrow=2)
 
 
 # ------------ age----------
@@ -151,25 +211,6 @@ ggplot(data, aes(x = fare, fill = survived)) +
   theme_grey() + facet_grid(.~sex)
 
 
-
-data$boat <- as.character(data$boat)
-data$survived <- as.factor(data$survived)
-data$pclass <- as.factor(data$pclass)
-data$sibsp <- as.factor(data$sibsp)
-data$parch <- as.factor(data$parch)
-summary(data)
-data_sur <- data[data$survived==1,]
-data_un <- data[data$survived==0,]
-summary(data_sur)
-summary(data_un)
-
-# age 越小，越有可能上船 (但不一定會存活?)
-par(mfrow=c(1,2))
-hist(data$age[data$survived==1], main = "the age histogram for those who were survived" 
-     ,xlab="age")
-
-summary(data$age[data$survived==1])
-
 # sibsp的影響
 par(mfrow=c(1,2))
 boxplot(data$sibsp, range=2, main="sibsp")
@@ -180,11 +221,10 @@ summary(data_un$sibsp)
 table(data_sur$sibsp)/length(data_sur$sibsp)*100
 table(data_un$sibsp)/length(data_un$sibsp)*100
 table(data$sibsp)/length(data$sibsp)*100
-# 船票價的影響
-data$fare[data$survived==1]
-hist(data$fare[data$survived==1], main="histogram of fares of survived people")
-summary(data$fare[data$survived==1])
-summary(data$fare)
+
+
+
+
 par(pch=19)
 plot(data$age, data$fare)
 points(data$age[data$survived==1], data$fare[data$survived==1], col="red") #活下
@@ -193,9 +233,6 @@ points(data$age[data$survived==1 & data$sibsp!=0 & data$parch!=0],
 points(data$age[data$survived==1 & data$sibsp!=0 & data$parch!=0 & data$sex=="female"], data$fare[data$survived==1 & data$sibsp!=0 & data$parch!=0 & data$sex=="female"], 
        col="green")
 #legend("topright", legend=c("活下來",paste0("活下來","\n","有sibsp&parch"),"活下來+有sibsp&parch+女性"),col=c("red","yellow","green"),pch=19)
-#活下且有兄弟姊妹親人是女性的比例是
-length(data$age[data$survived==1 & data$sibsp!=0 & data$parch!=0& data$sex=="female"])/length(data$age[data$survived==1 & data$sibsp!=0 & data$parch!=0])
-length(data$age[data$survived==0 & data$sibsp!=0 & data$parch!=0& data$sex=="male"])/length(data$age[data$survived==0 & data$sibsp!=0 & data$parch!=0])
 
 
 #活下且有兄弟姊妹親人等等

@@ -1,0 +1,89 @@
+https://cran.r-project.org/web/packages/xgboost/vignettes/xgboostPresentation.html
+
+
+
+https://medium.com/@cwchang/gradient-boosting-%E7%B0%A1%E4%BB%8B-f3a578ae7205
+https://en.wikipedia.org/wiki/Decision_tree_learning
+https://en.wikipedia.org/wiki/Gradient_boosting
+https://en.wikipedia.org/wiki/Decision_tree_learning
+https://medium.com/mlreview/gradient-boosting-from-scratch-1e317ae4587d
+https://www.google.com.tw/search?q=weak+learner+vs+strong+learner+%E4%B8%AD%E6%96%87&oq=weak+learner+vs+strong+learner+%E4%B8%AD%E6%96%87&aqs=chrome..69i57.7890j0j7&sourceid=chrome&ie=UTF-8
+https://www.google.com.tw/search?ei=uZoDW4jJNYqV8wW2jbqYAw&q=xgboost+in+r&oq=xgboost+in+r&gs_l=psy-ab.3..0l4j0i30k1l4j0i5i30k1l2.1949.3864.0.4069.9.7.2.0.0.0.106.342.6j1.7.0....0...1c.1.64.psy-ab..0.9.350...0i67k1j0i13k1j0i13i30k1j0i13i5i30k1.0.1asFzMFbpis
+
+
+
+
+
+
+
+
+ XGBoost 全名為 Extreme Gradient Boosting，主要是基於梯度提升決策樹 (Gradient Boosted Decision Tree，GBT)，被應用於解決監督式學習的問題，監督式學習主要是藉由多個特徵的訓練資料中學習建立一個模型，並且透過模型預測目標變數的結果。其中模型以數學函數表示，透過給定 X 針對 Y 進行預測的目標函數，其中模型的參數會從資料中學習調整，同時根據預測值的不同，我們可以將問題類型分為迴歸或分類。
+
+
+https://www.youtube.com/watch?v=j5Zir5Ij1Mg
+
+
+Target is the outcome of our dataset meaning it is the binary classification we will try to predict.
+XGBoost is built to manage huge dataset very efficiently.
+
+xgb.train is an advanced interface for training an xgboost model. The xgboost function is a simpler wrapper for xgb.train.
+
+
+# basic training
+
+We will train decision tree model using the following parameters:
+objective = "binary:logistic": we will train a binary classification model ;
+max_depth = 2: the trees won’t be deep, because our case is very simple ;
+nthread = 2: the number of cpu threads we are going to use;
+nrounds = 2: there will be two passes on the data, the second one will enhance the model by further reducing the difference between ground truth and prediction.
+
+bstSparse <- xgboost(data = train$data, label = train$label, max_depth = 2, eta = 1, nthread = 2, nrounds = 2, objective = "binary:logistic")
+###-------sparse matrix
+As seen below, the data are stored in a dgCMatrix which is a sparse matrix and label vector is a numeric vector ({0,1}):
+
+class(train$data)[1]
+## [1] "dgCMatrix"
+
+bstSparse <- xgboost(data = train$data, label = train$label, max_depth = 2, eta = 1, nthread = 2, nrounds = 2, objective = "binary:logistic")
+
+
+###-------dense matrix
+Alternatively, you can put your dataset in a dense matrix, i.e. a basic R matrix.
+
+bstDense <- xgboost(data = as.matrix(train$data), label = train$label, max_depth = 2, eta = 1, nthread = 2, nrounds = 2, objective = "binary:logistic")
+
+###-------xgb.DMatrix
+XGBoost offers a way to group them in a xgb.DMatrix. You can even add other meta data in it. It will be useful for the most advanced features we will discover later.
+
+dtrain <- xgb.DMatrix(data = train$data, label = train$label)
+bstDMatrix <- xgboost(data = dtrain, max_depth = 2, eta = 1, nthread = 2, nrounds = 2, objective = "binary:logistic")
+#---------Verbose option
+XGBoost has several features to help you to view how the learning progress internally. The purpose is to help you to set the best parameters, which is the key of your model quality.
+
+One of the simplest way to see the training progress is to set the verbose option (see below for more advanced technics).
+# verbose = 0, no message
+# verbose = 1, print evaluation metric
+ ## [1]  train-error:0.046522 
+ ## [2]  train-error:0.022263
+# verbose = 2, also print information about tree
+ ## [23:02:35] amalgamation/../src/tree/updater_prune.cc:74: tree pruning end, 1 roots, 6 extra nodes, 0 pruned nodes, max_depth=2
+ ## [1]  train-error:0.046522 
+ ## [23:02:35] amalgamation/../src/tree/updater_prune.cc:74: tree pruning end, 1 roots, 4 extra nodes, 0 pruned nodes, max_depth=2
+ ## [2]  train-error:0.022263
+
+
+#----Advanced features
+Most of the features below have been implemented to help you to improve your model by offering a better understanding of its content.
+
+1.8.1 Dataset preparation
+For the following advanced features, we need to put data in xgb.DMatrix as explained above.
+
+dtrain <- xgb.DMatrix(data = train$data, label=train$label)
+dtest <- xgb.DMatrix(data = test$data, label=test$label)
+
+1.8.2 Measure learning progress with xgb.train
+Both xgboost (simple) and xgb.train (advanced) functions train models.
+
+One of the special feature of xgb.train is the capacity to follow the progress of the learning after each round. Because of the way boosting works, there is a time when having too many rounds lead to an overfitting. You can see this feature as a cousin of cross-validation method. The following techniques will help you to avoid overfitting or optimizing the learning time in stopping it as soon as possible.
+
+One way to measure progress in learning of a model is to provide to XGBoost a second dataset already classified. Therefore it can learn on the first dataset and test its model on the second one. Some metrics are measured after each round during the learning.

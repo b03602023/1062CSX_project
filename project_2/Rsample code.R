@@ -1,0 +1,145 @@
+library(xgboost)
+library(Matrix)
+
+set.seed(1234)
+
+train <- read.csv("train.csv")
+test  <- read.csv("test.csv")
+
+##### Removing IDs
+train$ID <- NULL
+test.id <- test$ID
+test$ID <- NULL
+
+### Storing the columns' minima and maxima
+maxmin <- data.frame()
+i <- 1
+for(c in (names(train))){
+  maxmin[i,1] <- min(train[train$TARGET==1,c])
+  maxmin[i,2] <- max(train[train$TARGET==1,c])
+  i=i+1
+}
+
+row.names(maxmin) <- names(train)
+names(maxmin) <- c('min', 'max')
+
+##### Extracting TARGET  不希望TARGET這個變數受到下面的操作影響
+#target is the outcome of our dataset meaning it is the binary classification we will try to predict.
+
+train.y <- train$TARGET
+train$TARGET <- NULL
+
+##### 0 count per line
+count0 <- function(x) {
+  return( sum(x == 0) )
+}
+train$n0 <- apply(train, 1, FUN=count0)
+test$n0 <- apply(test, 1, FUN=count0)
+
+##### Removing constant features
+cat("\n## Removing the constants features.\n")
+for (f in names(train)) {
+  if (length(unique(train[[f]])) == 1) {   #with duplicate elements/rows removed
+    cat(f, "is constant in train. We delete it.\n")
+    train[[f]] <- NULL
+    test[[f]] <- NULL
+  }
+}
+
+##### Removing identical features
+features_pair <- combn(names(train), 2, simplify = F) #組合(2個為一組)
+toRemove <- c()
+for(pair in features_pair) {
+  f1 <- pair[1]
+  f2 <- pair[2]
+  
+  if (!(f1 %in% toRemove) & !(f2 %in% toRemove)) {
+    if (all(train[[f1]] == train[[f2]])) {
+      cat(f1, "and", f2, "are equals.\n")
+      toRemove <- c(toRemove, f2)
+    }
+  }
+}
+library(dplyr)
+feature.names <- setdiff(names(train), toRemove)  #取出特性不同的變數(把特性相同的變數移除)
+
+
+train$var38 <- log(train$var38)
+test$var38 <- log(test$var38)
+maxmin['var38', 'min'] <- log(maxmin['var38', 'min'])
+maxmin['var38', 'max'] <- log(maxmin['var38', 'max'])
+
+train <- train[, feature.names]
+test <- test[, feature.names]
+
+#---limit vars in test based on min and max vals of train
+# 用train最小值最大值來界定test的最小值最大值
+print('Setting min-max lims on test data')
+for(f in colnames(train)){
+  lim <- min(train[,f])
+  test[test[,f]<lim,f] <- lim
+  
+  lim <- max(train[,f])
+  test[test[,f]>lim,f] <- lim  
+}
+#---
+
+train$TARGET <- train.y
+
+train <- sparse.model.matrix(TARGET ~ ., data = train)
+
+#advance feature-- xgb.DMatrix
+
+dtrain <- xgb.DMatrix(data=train, label=train.y)
+watchlist <- list(train=dtrain)
+
+param <- list(  objective           = "binary:logistic", 
+                booster             = "gbtree",
+                eval_metric         = "auc",
+                eta                 = 0.0202048,
+                max_depth           = 5,
+                subsample           = 0.6815,
+                colsample_bytree    = 0.701
+)
+
+clf <- xgb.train(   params              = param, 
+                    data                = dtrain, 
+                    nrounds             = 560,
+                    verbose             = 1,
+                    watchlist           = watchlist,	
+                    maximize            = FALSE
+)    #advanced interface for training an xgboost model
+
+test$TARGET <- -1
+
+test_cp <- test
+test_cp$TARGET <- NULL
+test_cp$n0 <- NULL
+
+test <- sparse.model.matrix(TARGET ~ ., data = test)
+
+#perform the prediction
+#These numbers doesn’t look like binary classification {0,1}. We need 
+#to perform a simple transformation before being able to use these results.
+preds <- predict(clf, test)
+
+
+#Transform the regression in a binary classification
+prediction <- as.numeric(preds > 0.5)
+print(head(prediction))
+# The most important thing to remember is that to do a classification, you 
+# just do a regression to the label and then apply a threshold.
+
+### Frequentist cut
+#用train data的最大最小值作為probability的切割
+#(?但是不知道為什麼她要這樣做，因為這樣連最大值的preds值也會小於0.5，最後變成target為0)
+
+for(c in names(test_cp)){
+  preds[test_cp[c] < maxmin[c, 'min']] = 0.0001
+  preds[test_cp[c] > maxmin[c, 'max']] = 0.0001
+}
+
+### Submission
+submission <- data.frame(ID=test.id, TARGET=preds)
+cat("saving the submission file\n")
+write.csv(submission, "submission.csv", row.names = F)
