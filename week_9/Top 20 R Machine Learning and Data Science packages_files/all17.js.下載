@@ -1,0 +1,150 @@
+//all17 functions aw9 ckn e17 topmenu17
+function aw9 () {
+  var path=kpath + 'aps/';
+  var ts=new Date().getTime();
+  var ms=new Date().getMilliseconds();
+  Nt=new Array(); Et=new Array(); Tt=new Array(); Ut=new Array();
+  At=new Array(); Wt=new Array(); Ht=new Array(); Tx=new Array(); tslot=0; tad=0;
+tad++;
+  for (i=0; i<4; i++) { Tx[++tslot]=tad; }
+  Nt[1]='t-ang-18m05-12bb';
+  Et[1]='.jpg';
+  Tt[1]='Businesses trust ANGOSS to develop credit risk models. Download the 12 building blocks whitepaper';
+  Ut[1]='http://www.angoss.com/landing-pages/12-building-blocks/?utm_source=kdnuggets&utm_medium=banner&utm_campaign=12_building_blocks_2018';
+  At[1]='Businesses trust ANGOSS to develop credit risk models. Download the 12 building blocks whitepaper';
+  Wt[1]=750;
+  Ht[1]=100;
+tad++;
+  for (i=0; i<4; i++) { Tx[++tslot]=tad; }
+  Nt[2]='t-jmp-18m05-fung';
+  Et[2]='.jpg';
+  Tt[2]='<font size=+1>Predictive modeling for targeted marketing - read a chapter from Numbersense</font>';
+  Ut[2]='https://www.jmp.com/en_us/whitepapers/book-chapters/fung-numbersense.html?utm_source=kdnuggetshp&utm_medium=advertisement&utm_campaign=wp701a0000000tR0M';
+  At[2]='JMP';
+  Wt[2]=750;
+  Ht[2]=100;
+tad++;
+  for (i=0; i<4; i++) { Tx[++tslot]=tad; }
+  Nt[3]='t-paw-18m05-ind';
+  Et[3]='.jpg';
+  Tt[3]='Predictive Analytics World - Industry 4.0, Where AI meets IoT, Munich, 12-13 June';
+  Ut[3]='https://predictiveanalyticsworld.de/en/industry4-0/muenchen2018/?utm_source=KDN&utm_medium=Banner&utm_campaign=PAWINDMUC18';
+  At[3]='Predictive Analytics World - Industry 4.0, Where AI meets IoT, Munich, 12-13 June';
+  Wt[3]=750;
+  Ht[3]=100;
+tad++;
+  for (i=0; i<4; i++) { Tx[++tslot]=tad; }
+  Nt[4]='t-uc-18m04-asmay';
+  Et[4]='.jpg';
+  Tt[4]='UC Analytics Summit, Conference + Training, May 14-16, Cincinnati - Register Now';
+  Ut[4]='http://www.business.uc.edu/analytics-summit';
+  At[4]='UC Analytics Summit, Conference + Training, May 14-16, Cincinnati - Register Now';
+  Wt[4]=750;
+  Ht[4]=100;
+tad++;
+  for (i=0; i<4; i++) { Tx[++tslot]=tad; }
+  Nt[5]='t-ont-18m05-dst';
+  Et[5]='.png';
+  Tt[5]='Live Online Training - Designing Semantic Technology - Proof-of-Concept';
+  Ut[5]='https://ontotext.com/designing-semantic-technology-poc/?utm_source=kdnuggets&utm_medium=banner&utm_campaign=poc-training';
+  At[5]='Live Online Training - Designing Semantic Technology - Proof-of-Concept';
+  Wt[5]=750;
+  Ht[5]=100;
+  rslot=1+Math.floor(Math.random()*tslot); rtad=Tx[rslot];
+  whb=' width=' + Wt[rtad] + ' height=' + Ht[rtad] + ' border=0';
+  s='<table border=0 cellspacing=5 cellpadding=20 width=990><tr><td valign=top align=center width=750>';
+  if (Wt[rtad] == 1) {
+      s+=Ut[rtad];
+  } else {
+      s+='<a href=' + Ut[rtad] + ' onclick="_gaq.push([\'_trackPageview\',\'/zt/' + Nt[rtad] + '\']);" target=_blank>';
+  }
+  s+='<img src=' + path + Nt[rtad] + Et[rtad] + '?ms=' + ms + whb + ' alt="' + At[rtad] + '">';
+  s+='<br><b>' + Tt[rtad] + '</b></a></td>';
+  s+='</tr></table><br>';  document.writeln(s);
+}
+function ckn () {
+ak='<a href="https://www.kdnuggets.com/'; hk='&bull; ' + ak; j='';
+t="Why Data and Infrastructure are key to determining Customer Intent, May 31 Webinar";
+j+=hk + '2018/05/looker-data-infrastructure-customer-intent-may.html">'  + t + '</a><br>';
+t="Python eats away at R: Top Software for Analytics, Data Science, Machine Learning in 2018: Trends and Analysis";
+j+=hk + '2018/05/poll-tools-analytics-data-science-machine-learning-results.html">'  + t + '</a><br>';
+t="If chatbots are to succeed, they need this";
+j+=hk + '2018/05/chatbots-succeed-need-logic.html">'  + t + '</a><br>';
+t="Generative Adversarial Neural Networks: Infinite Monkeys and The Great British Bake Off";
+j+=hk + '2018/05/generative-adversarial-neural-networks-infinite-monkeys-great-british-bake-off.html">'  + t + '</a><br>';
+t="ETL vs ELT: Considering the Advancement of Data Warehouses";
+j+=hk + '2018/05/etl-vs-elt-considering-advancement-data-warehouses.html">'  + t + '</a><br>';
+document.writeln(j);
+}
+function e17_init() {
+var ts=new Date().getTime();
+Ne=new Array(); Ee=new Array(); Te=new Array(); Ue=new Array();
+Ae=new Array(); We=new Array(); He=new Array(); Wta=new Array(); var wt=0;
+wt+=1;Wta[1]=wt;
+Ne[1]="e-sas-18m01-an"; Ee[1]=".gif"; We[1]=1; He[1]=1;
+Ue[1]='<ins class="dcmads" style="display:inline-block;width:300px;height:250px" data-dcm-placement="N6626.289580.KDNUGGETS.COM/B20436614.210872246" data-dcm-rendering-mode="iframe" data-dcm-https-only data-dcm-resettable-device-id="" data-dcm-app-id=""> <script src="https://www.googletagservices.com/dcm/dcmads.js"></script></ins>';
+Te[1]=" ";
+Ae[1]="SAS Analytics Campaign";
+wt+=1;Wta[2]=wt;
+Ne[2]="e-h2o-18m04-21d"; Ee[2]=".jpg"; We[2]=300; He[2]=250;
+Ue[2]='https://www.h2o.ai/try-driverless-ai?utm_source=KDNuggetsApril2018';
+Te[2]="H2O.ai: Automatic Machine Learning for Enterprise - Free 21 day trial";
+Ae[2]="H2O.ai: Automatic Machine Learning for Enterprise - Free 21 day trial";
+wt+=1;Wta[3]=wt;
+Ne[3]="e-psu-18m04-msdao"; Ee[3]=".jpg"; We[3]=300; He[3]=250;
+Ue[3]='https://www.worldcampus.psu.edu/penn-state-online-data-analytics-programs?utm_source=kdnuggets&utm_medium=email&utm_campaign=DATA+17-18&utm_content=Mar.5.2018&cid=ML31676';
+Te[3]="Put Big Data to work - Earn MS in Data Analytics Online from PennState";
+Ae[3]="Put Big Data to work - Earn MS in Data Analytics Online from PennState";
+wt+=1;Wta[4]=wt;
+Ne[4]="e-nyu-18m04-data"; Ee[4]=".png"; We[4]=300; He[4]=250;
+Ue[4]='http://www.stern.nyu.edu/programs-admissions/ms-business-analytics/request-more-information?utm_source=kdnuggets&utm_medium=ros&utm_campaign=kdnuggets121217&utm_term=300x250&utm_content=fy18';
+Te[4]="Data with Insight Leads you to Decisions with Clarity<br>NYU MS in Business Analytics";
+Ae[4]="NYU";
+wt+=1;Wta[5]=wt;
+Ne[5]="e-sas-18m01-pt"; Ee[5]=".gif"; We[5]=1; He[5]=1;
+Ue[5]='<ins class="dcmads" style="display:inline-block;width:300px;height:250px" data-dcm-placement="N6626.289580.KDNUGGETS.COM/B20448498.210842591" data-dcm-rendering-mode="iframe" data-dcm-https-only data-dcm-resettable-device-id="" data-dcm-app-id=""> <script src="https://www.googletagservices.com/dcm/dcmads.js"></script></ins>';
+Te[5]=" ";
+Ae[5]="SAS Pubs and Training";
+wt+=1;Wta[6]=wt;
+Ne[6]="e-ana-18m04-cert"; Ee[6]=".png"; We[6]=300; He[6]=250;
+Ue[6]='https://www.anaconda.com/anaconda-data-science-certification?utm_source=kd&utm_medium=banner%20ad&utm_campaign=anaconda_certification';
+Te[6]="Anaconda Data Science Certification - Register Now";
+Ae[6]="Anaconda Data Science Certification - Register Now";
+wt+=1;Wta[7]=wt;
+Ne[7]="e-kni-18m04-kap"; Ee[7]=".jpg"; We[7]=300; He[7]=250;
+Ue[7]='https://www.knime.com/software?kd0416';
+Te[7]="KNIME Analytics Platform helps solve your most complex data puzzles";
+Ae[7]="KNIME Analytics Platform helps solve your most complex data puzzles";
+wt+=0.5;Wta[8]=wt;
+Ne[8]="e-tdw-18m05-dsl"; Ee[8]=".jpg"; We[8]=300; He[8]=250;
+Ue[8]='https://tdwi.org/events/conferences/anaheim/home.aspx?utm_source=KD&utm_medium=banner&utm_campaign=ANA_SEB';
+Te[8]="TDWI Anaheim, Aug 5-10: Learn Data Strategy and Leadership";
+Ae[8]="TDWI Anaheim, Aug 5-10: Learn Data Strategy and Leadership";
+wt+=0.5;Wta[9]=wt;
+Ne[9]="e-tdw-18m05-mlaa"; Ee[9]=".jpg"; We[9]=300; He[9]=250;
+Ue[9]='https://tdwi.org/events/conferences/anaheim/home.aspx?utm_source=KD&utm_medium=banner&utm_campaign=ANA_SEB';
+Te[9]="TDWI Anaheim, Aug 5-10: Learn Machine Learning and Advanced Analytics";
+Ae[9]="TDWI Anaheim, Aug 5-10: Learn Machine Learning and Advanced Analytics";
+}
+function e17_write (nads) {
+  var path=kpath + 'aps/';
+  var ms=new Date().getMilliseconds(); var adshown=new Array();
+  for (adpos=1; adpos<=nads; adpos++) {
+    do { var adn=1; var re=Math.random()*8;
+      while (Wta[adn]<re) {adn++};
+    } while (adshown[adn]==1);
+    if (We[adn]==1) { s=Ue[adn]; s=s.replace('ze/e-','ze/' + nads + adpos + ':e-'); 
+      s+='<img src=' + path + Ne[adn] + '.gif?ms' + ms + ' width=1 height=1 border=0>';
+    } else {
+      s='<a href=' + Ue[adn] + ' onclick="_gaq.push([\'_trackPageview\',\'/ze/' + nads + adpos + ':' + Ne[adn] + '\']);" target=_blank>';
+      s+='<img src=' + path + Ne[adn] + Ee[adn] + '?ms' + ms +  ' width=' + We[adn] + ' height=' + He[adn] + ' border=0 alt="' + Ae[adn] + '">';
+      s+='<br><b>' + Te[adn] + '</b></a><br>';}
+    if (nads>1) {s+='<br><hr class="grey-line"><br>'};
+    document.writeln(s); adshown[adn]=1;
+  }
+}
+function topmenu17 () {
+ahk='<li><a href="https://www.kdnuggets.com/';
+s='<div class="navigation"><ul id="menu-menu" class="menu">' + ahk + 'software/index.html">SOFTWARE</a>' + ahk + 'news/index.html">NEWS</a>' + ahk + 'news/top-stories.html">Top stories</a>' + ahk + 'opinions/index.html">Opinions</a>' + ahk + 'tutorials/index.html">Tutorials</a>' + ahk + 'jobs/index.html">JOBS</a>' + ahk + 'companies/index.html">Companies</a>' + ahk + 'courses/index.html">Courses</a>' + ahk + 'datasets/index.html">Datasets</a>' + ahk + 'education/index.html">EDUCATION</a>' + ahk + 'education/analytics-data-mining-certificates.html">Certificates</a>' + ahk + 'meetings/index.html">Meetings</a>' + ahk + 'webcasts/index.html">Webinars</a></ul></div>'; 
+document.writeln(s);
+}
