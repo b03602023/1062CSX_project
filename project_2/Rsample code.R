@@ -23,7 +23,7 @@ for(c in (names(train))){
 row.names(maxmin) <- names(train)
 names(maxmin) <- c('min', 'max')
 
-##### Extracting TARGET  ¤£§Æ±æTARGET³o­ÓÅÜ¼Æ¨ü¨ì¤U­±ªº¾Þ§@¼vÅT
+##### Extracting TARGET  ???Æ±?TARGET?o???Ü¼Æ¨????U?????Þ§@?v?T
 #target is the outcome of our dataset meaning it is the binary classification we will try to predict.
 
 train.y <- train$TARGET
@@ -47,7 +47,7 @@ for (f in names(train)) {
 }
 
 ##### Removing identical features
-features_pair <- combn(names(train), 2, simplify = F) #²Õ¦X(2­Ó¬°¤@²Õ)
+features_pair <- combn(names(train), 2, simplify = F) #?Õ¦X(2?Ó¬??@??)
 toRemove <- c()
 for(pair in features_pair) {
   f1 <- pair[1]
@@ -61,7 +61,7 @@ for(pair in features_pair) {
   }
 }
 library(dplyr)
-feature.names <- setdiff(names(train), toRemove)  #¨ú¥X¯S©Ê¤£¦PªºÅÜ¼Æ(§â¯S©Ê¬Û¦PªºÅÜ¼Æ²¾°£)
+feature.names <- setdiff(names(train), toRemove)  #???X?S?Ê¤??P???Ü¼?(???S?Ê¬Û¦P???Ü¼Æ²???)
 
 
 train$var38 <- log(train$var38)
@@ -73,7 +73,7 @@ train <- train[, feature.names]
 test <- test[, feature.names]
 
 #---limit vars in test based on min and max vals of train
-# ¥Îtrain³Ì¤p­È³Ì¤j­È¨Ó¬É©wtestªº³Ì¤p­È³Ì¤j­È
+# ??train?Ì¤p?È³Ì¤j?È¨Ó¬É©wtest???Ì¤p?È³Ì¤j??
 print('Setting min-max lims on test data')
 for(f in colnames(train)){
   lim <- min(train[,f])
@@ -110,6 +110,7 @@ clf <- xgb.train(   params              = param,
                     maximize            = FALSE
 )    #advanced interface for training an xgboost model
 
+
 test$TARGET <- -1
 
 test_cp <- test
@@ -119,7 +120,7 @@ test_cp$n0 <- NULL
 test <- sparse.model.matrix(TARGET ~ ., data = test)
 
 #perform the prediction
-#These numbers doesn¡¦t look like binary classification {0,1}. We need 
+#These numbers doesn??t look like binary classification {0,1}. We need 
 #to perform a simple transformation before being able to use these results.
 preds <- predict(clf, test)
 
@@ -131,8 +132,8 @@ print(head(prediction))
 # just do a regression to the label and then apply a threshold.
 
 ### Frequentist cut
-#¥Îtrain dataªº³Ì¤j³Ì¤p­È§@¬°probabilityªº¤Á³Î
-#(?¦ý¬O¤£ª¾¹D¬°¤°»ò¦o­n³o¼Ë°µ¡A¦]¬°³o¼Ë³s³Ì¤j­Èªºpreds­È¤]·|¤p©ó0.5¡A³Ì«áÅÜ¦¨target¬°0)
+#??train data???Ì¤j?Ì¤p?È§@??probability???ï¿½ï¿½?
+#(????O?????D???????o?n?o?Ë°??A?]???o?Ë³s?Ì¤j?Èª?preds?È¤]?|?p??0.5?A?Ì«??Ü¦?target??0)
 
 for(c in names(test_cp)){
   preds[test_cp[c] < maxmin[c, 'min']] = 0.0001
