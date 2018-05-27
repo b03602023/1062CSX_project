@@ -38,8 +38,10 @@ data$RaceM <- as.numeric(data$RaceM)
 data$RaceF <- as.numeric(data$RaceF)
 #Removing NA Values 
 data <- data[complete.cases(data), ]
+# complete.cases這個函數返回matrix裡面所有row是否有完整沒有NA值的logical vector
 
-#Performing Variable Selection 
+#Performing Variable Selection 主成分分析: 減少數據集的維數，保留對變異數貢獻最大的特徵
+
 pca_data <- prcomp(data, scale = TRUE)
 stdev_data <- summary(pca_data)$importance[2,]
 data <- data[, which(stdev_data >= .04)]
@@ -49,7 +51,7 @@ singleLayerPerceptron <- function(max_iter = 3000, tol = .001){
   
   #Initializing weights and other parameters 
   x_train <- data[, 2:ncol(data)]
-  y_train <- data[,1]
+  y_train <- data[,1]    #Decision M&F 都為1->(1)，或其中一個不為1->(0)。
   weights <- matrix(rnorm(ncol(x_train)))
   cost <- 0
   iter <- 1
@@ -58,12 +60,14 @@ singleLayerPerceptron <- function(max_iter = 3000, tol = .001){
   
     while(converged == FALSE){
       
-      #Cross Validating Data 
+      #Cross Validating Data   #每個特徵的資料大小為200
       rows <- sample(1:200, 200, replace = FALSE)
-      x_train <- as.matrix(x_train[rows, 1:ncol(x_train)])
+      x_train <- as.matrix(x_train[rows, 1:ncol(x_train)])   #1:ncol(x_train) all column included
       y_train <- y_train[rows]
       
       #Single Layer Perceptron 
+      #Perceptron這個演算法只有在資料是線性可分的形況下才能正確分類
+      #（演算法才會停止）
       #Our Log Odds Threshold hear is the Average Log Odds
       weighted_sum <- 1/(1 + exp(-(x_train%*%weights)))
       y_h <- ifelse(weighted_sum <= mean(weighted_sum), 1, 0)
