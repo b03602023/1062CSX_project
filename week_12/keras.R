@@ -1,2 +1,2 @@
-library(keras)
-mnist <- dataset_mnist()
+# Time Series Forecasting with Recurrent Neural Networks
+# https://tensorflow.rstudio.com/blog/time-series-forecasting-with-recurrent-neural-networks.html
