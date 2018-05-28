@@ -16,7 +16,7 @@ ggplot(data[1:1440,], aes(x = 1:1440, y = `T..degC.`)) + geom_line()
 #If you were trying to predict average temperature for the next month given a few months of 
 #past data, the problem would be easy, due to the reliable year-scale periodicity of the data. 
 #But looking at the data over a scale of days, the temperature looks a lot more chaotic. 
-#Is this time series predictable at a daily scale? Let’s find out.
+#Is this time series predictable at a daily scale? Let??s find out.
 
 #Discard the first column because the it is text type.
 data <- data.matrix(data[,-1])
@@ -28,7 +28,7 @@ mean <- apply(train_data, 2, mean)
 std <- apply(train_data, 2, sd)
 #Use scale() function and the training data to normalize the whole data
 
-#檢測scale的功能->將資料的平均變成0、標準差變成1。
+#?侅?scale???\??->?N???う??????雃?0?B?郱ヴt?雃?1?C
 #apply(scale(data, center = apply(data, 2, mean), scale = apply(data, 2, sd)), 2, mean)
 #apply(scale(data, center = apply(data, 2, mean), scale = apply(data, 2, sd)), 2, sd)
 
@@ -126,3 +126,6 @@ evaluate_naive_method <- function() {
 }
 
 evaluate_naive_method()
+
+
+

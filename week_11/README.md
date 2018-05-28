@@ -12,3 +12,8 @@ Perceptron[感知器](https://medium.com/@yehjames/%E8%B3%87%E6%96%99%E5%88%86%E
 [Time Series Forecasting with Recurrent Neural Networks(RNN)](https://tensorflow.rstudio.com/blog/time-series-forecasting-with-recurrent-neural-networks.html)
 
 [Getting started with Keras](https://cran.r-project.org/web/packages/keras/vignettes/getting_started.html)
+
+
+[Forecasting time series with neural networks in R](http://kourentzes.com/forecasting/2017/02/10/forecasting-time-series-with-neural-networks-in-r/)
+
+[Example of time series prediction using neural networks in R](https://stats.stackexchange.com/questions/46887/example-of-time-series-prediction-using-neural-networks-in-r?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa)
