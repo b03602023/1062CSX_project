@@ -1,0 +1,19 @@
+﻿The exact formulation of the problem will be as follows: given data going as far back as lookback timesteps (a timestep is 10 minutes) and sampled every steps timesteps, can you predict the temperature in delay timesteps? You’ll use the following parameter values:
+
+lookback = 1440 — Observations will go back 10 days.
+lookback — How many timesteps back the input data should go.
+steps = 6 — Observations will be sampled at one data point per hour.
+step — The period, in timesteps, at which you sample data. You’ll set it 6 in order to draw one data point every hour.
+delay = 144 — Targets will be 24 hours in the future.
+delay — How many timesteps in the future the target should be.
+
+The code for the data generator you’ll use is below. It yields a list (samples, targets), where samples is one batch of input data and targets is the corresponding array of target temperatures. It takes the following arguments:
+
+data — The original array of floating-point data, which you normalized in listing 6.32.
+lookback — How many timesteps back the input data should go.
+delay — How many timesteps in the future the target should be.
+min_index and max_index — Indices in the data array that delimit限定 which timesteps to draw from. This is useful for keeping a segment of the data for validation and another for testing.
+shuffle — Whether to shuffle the samples(亂序) or draw them in chronological order(按時間順序排列). 
+shuffle 本质上就是让序列里面的每一个元素等概率的重新分布在序列的任何位置，shuffle和random，二者的区别在于，前者打乱播放顺序，保证所有的歌曲都会播放一遍；而后者每次随机选择一首。
+batch_size — The number of samples per batch.
+step — The period, in timesteps, at which you sample data. You’ll set it 6 in order to draw one data point every hour.
