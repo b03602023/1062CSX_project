@@ -111,3 +111,18 @@ val_steps <- (300000 - 200001 - lookback) / batch_size
 
 # How many steps to draw from test_gen in order to see the entire test set
 test_steps <- (nrow(data) - 300001 - lookback) / batch_size
+
+
+library(keras)
+evaluate_naive_method <- function() {
+  batch_maes <- c()
+  for (step in 1:val_steps) {
+    c(samples, targets) %<-% val_gen()
+    preds <- samples[,dim(samples)[[2]],2]
+    mae <- mean(abs(preds - targets))
+    batch_maes <- c(batch_maes, mae)
+  }
+  print(mean(batch_maes))
+}
+
+evaluate_naive_method()
