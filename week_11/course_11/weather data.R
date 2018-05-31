@@ -83,33 +83,37 @@ for(i in 1:ncol(data)){
 }
 t_data <- t_data[,-1]
 t_data <- t_data[complete.cases(t_data),]
-#PCA
+#--------- PCA -------
 pca_data <- prcomp(t_data, scale = TRUE)
 stdev_data <- summary(pca_data)$importance[2,]
 tp_data <- t_data[, which(stdev_data >= .04)]
 tp_data <- cbind(t_data[,15],tp_data)
 names(tp_data)[1] <- names(t_data)[15]
-
+names(tp_data) <- c("rain","pressure","SLP","MaxP","MinP","T")
 
 # 手動抽取資訊
-th_data  <- data[,c(2,8,9,11,13,14,17,22)]
-name <- names(th_data)
+#th_data  <- data[,c(2,8,9,11,13,14,17,22)]
+#name <- names(th_data)
 #change the data type
-str(t_data)
-th_data <- apply(th_data, MARGIN = 2, FUN = as.character)
+#str(t_data)
+#th_data <- apply(th_data, MARGIN = 2, FUN = as.character)
 
 #Removing NA Values 
 #t_data <- data[complete.cases(th_data), ]
-th_data <- apply(th_data, 2, as.numeric)
-th_data <- data.frame(matrix(th_data, nrow = nrow(th_data)))
-names(th_data) <- name
+#th_data <- apply(th_data, 2, as.numeric)
+#th_data <- data.frame(matrix(th_data, nrow = nrow(th_data)))
+#names(th_data) <- name
 
 
 
-# plot the graph
+#--------- visualization ------------
 library(ggplot2)
-ggplot(data = t_data, aes(x = 1:nrow(t_data), y = t_data[,5])) + geom_line() +
-  xlab("time") + ylab("temperature(degree C)")
+ggplot(data = tp_data, aes(x = 1:nrow(tp_data), y = tp_data[,6])) + geom_line() +
+  xlab("time") + ylab("temperature(degree C)") + 
+  geom_ma(ma_fun = SMA, n = 12, size = 1) 
+ggplot(data = tp_data, aes(x = 1:nrow(tp_data), y = tp_data[,1])) + geom_line() +
+  xlab("time") + ylab("rain(mm)")
+
 
 ggplot(data = t_data, aes(x = 1:nrow(t_data), y = t_data[,1])) + geom_line() +
   geom_line(data = t_data, aes(x = 1:nrow(t_data), y = t_data[,3]), color="red") +
@@ -122,12 +126,52 @@ ggplot(data = t_data[1:n,], aes(x = 1:n, y = t_data[1:n,1])) + geom_line() +
   xlab("time") + ylab("atmospheric pressure(hPa)")
 
 
+
+#--------- normalization ------------
+tp_mean <- apply(X = tp_data, MARGIN = 2, FUN = mean)
+tp_sd <- apply(X = tp_data, MARGIN = 2, FUN = sd)
+tpn_data <- scale(x = tp_data, center = tp_mean, scale = tp_sd)
+tpn_data <- data.frame(tpn_data)
+ggplot(data = tpn_data, aes(x = 1:nrow(tpn_data), y = tpn_data[,5])) + geom_line() +
+  xlab("time") + ylab("temperature(degree C)")
+ggplot(data = tpn_data, aes(x = 1:nrow(tpn_data), y = tpn_data[,1])) + geom_line() +
+  xlab("time") + ylab("rain(mm)") +
+  geom_line(data = tpn_data, aes(x = 1:nrow(tpn_data), y = tpn_data[,5]), color = "blue")
+
+#--------ML1------------
 # 總共有八年的資料
 # 將1-1300作為訓練資料，1300-2000作為validation，2000-2300作為test data
-nnetM <- nnet(formula = Species ~ ., linout = T, size = 3, decay = 0.001, maxit = 1000, trace = T, data = traindata)
-prediction <- predict(nnetM, t_data)
+nnetM <- nnet(formula = rain ~ ., linout = T, size = 3, decay = 0.001, maxit = 1000, trace = T, data = tp_data)
+prediction <- predict(nnetM, tp_data)
+prediction <- prediction*tp_sd[1]+tp_mean[1]
+ggplot(data = tp_data, aes(x = 1:nrow(tp_data), y = tp_data[,1])) + geom_line() +
+  xlab("time") + ylab("rainfall(mm)") +
+  geom_line(data = tp_data, aes(x = 1:nrow(tp_data), y = as.vector(prediction)), color = "red")
 
+ggplot(data = tp_data[1:n,], aes(x = 1:n, y = tp_data[1:n,1])) + geom_line() +
+  xlab("time") + ylab("rainfall(mm)") +
+  geom_line(data = tp_data[1:n,], aes(x = 1:n, y = as.vector(prediction)[1:n]), color = "red")
 
 # write.csv(x = data, file = paste0(start," to ", end,".csv"))
+#--------ML2------------
+#訓練模型
+library(neuralnet)
+f1 <- as.formula('rain~T/pressure')
+bpn <- neuralnet(formula = f1, data = tp_data, hidden = c(2,4),learningrate = 0.01,linear.output = F)
+print(bpn)
+
+#圖解BP
+plot(bpn)
 
 
+#--------ML 3-------------
+#nnfor package
+library(nnfor)
+
+x = ts(tp_data[,1])
+model <- elm(x)
+predict <- forecast(model)
+
+m <- mlp(x)
+pred <- forecast(m)
+p <- predict(mlp)

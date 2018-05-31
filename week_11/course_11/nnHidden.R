@@ -21,3 +21,4 @@ plot(bpn)
 #used in regression settings only; in classification settings, 
 #such as yours, the correct choice 
 #is to apply the activation function to the output neuron(s) as well.
+
