@@ -10,7 +10,7 @@ text <- html_text(html_nodes(x =res, css = "table.wikitable tbody tr td"))
 text <- html_text(raw.titles)
 #View(text)
 #2017-2018
-text <- text[21:24]    #第991~1183集 (2017/0703~2018/06/07)
+text <- text[21:24]    #第991~1183集 (2017/07/03~2018/06/07)
 #text <- matrix(text, nrow=length(text))
 text <- lapply(X = text, FUN = strsplit, split="\n", fixed=T)
 #text <- lapply(text, unlist)
@@ -150,24 +150,44 @@ for(i in 1:nrow(c_text)){
 c_text$"主題" <- as.character(c_text$"主題")
 c_text$"來賓" <- as.character(c_text$"來賓")
 c_text$"集數" <- as.numeric(as.character(c_text$"集數"))
+
 #來賓
 guest <- c_text$"來賓"
-strsplit(guest[1],"、")
 
 library(magrittr)
-guest <- guest %>% lapply(.,strsplit, "、") %>%
-  unlist %>%
-  lapply(.,strsplit,":") %>%
-  unlist %>%
-  lapply(.,strsplit,"&") %>%
-  unlist %>%
-  lapply(.,strsplit,",") %>% unlist %>%
-  lapply(.,strsplit,"：") %>% unlist
+cleanguest <- function(guest){
+  guest <- guest %>% lapply(.,strsplit, "、") %>%
+    unlist %>%
+    lapply(.,strsplit,":") %>%
+    unlist %>%
+    lapply(.,strsplit,"&") %>%
+    unlist %>%
+    lapply(.,strsplit,",") %>% unlist %>%
+    lapply(.,strsplit,"：") %>% unlist
+  return(guest)
+}
+guest_list <- lapply(X = guest, FUN = cleanguest)
+guest_vector <- cleanguest(guest)
 
-f_guest <- as.factor(guest)
+f_guest <- as.factor(guest_vector)
 View(table(f_guest))
 
-View(c_text)
+
+#------plot guest-------
+barplot(table(f_guest)[order(table(f_guest), decreasing = TRUE)][1:25]
+        , las = 2, ylim = c(0,35))
+grid()
+
+#library(ggplot2)
+#ggplot(f_guest, aes(x = fs, fill = sex)) +
+#  geom_bar(stat='count', position = 'dodge') +
+#  geom_label(stat = 'count', aes(label =..count..), size = 5, 
+#             position=position_dodge(0.9))+
+#  theme_grey(base_size = 15)
+
+
+
+#View(c_text)
 
 
 
