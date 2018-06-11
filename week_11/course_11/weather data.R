@@ -4,8 +4,8 @@
 library(rvest)
 library(magrittr)
 
-start="2010-08"  #蒐集資料的起始日期yyyy-mm
-end="2017-08"    #蒐集資料的結束日期yyyy-mm
+start="2016-11"  #蒐集資料的起始日期yyyy-mm
+end="2017-11"    #蒐集資料的結束日期yyyy-mm
 # 不同的測站會有不同的prefex
 prefex <- "http://e-service.cwb.gov.tw/HistoryDataQuery/MonthDataController.do?command=viewMain&station=466920&stname=%25E8%2587%25BA%25E5%258C%2597&datepicker="
 
