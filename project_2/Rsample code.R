@@ -85,7 +85,8 @@ for(f in colnames(train)){
 #---
 
 train$TARGET <- train.y
-
+class(train)
+mode(train)
 train <- sparse.model.matrix(TARGET ~ ., data = train)
 
 #advance feature-- xgb.DMatrix

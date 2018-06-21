@@ -273,3 +273,5 @@ table(pred_result, data$survived)    #無法成功因為age有139個NA
 
 plot(model, dataas, age ~ sibsp,
      slice = list(age = 3, sibsp= 4),color.palette = terrain.colors)
+
+
