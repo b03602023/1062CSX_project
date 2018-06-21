@@ -41,4 +41,7 @@
 ## week 8
 
 
+## final project
+[final project](https://b03602023.github.io/1062CSX_project/final project/ppt/期末報告.pptx)
+
 
