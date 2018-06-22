@@ -1,6 +1,6 @@
 ﻿## R_資料科學程式設計
 
-### week_2
+### [week_2](https://pecu.gitbooks.io/r_/content/week2.html)
 
 - learning
     - R basic II

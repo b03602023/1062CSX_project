@@ -9,19 +9,27 @@ project   |      content
 project1 | [網購網站之女裝及男裝特色分析](https://b03602023.github.io/1062CSX_project/week_5/project_1/project_1.html)
 project2 | Kaggle- santander custome satisfaction [code](https://rgmmmt4r.github.io/106-2_R_b04303117/project2/kaggle_group6_01copy.html)
 project2 | Kaggle- santander custome satisfaction [presentation PPT](https://b03602023.github.io/1062CSX_project/project_2/presentation/Santander-Customer-Satisfaction.pdf)
-project3 | [Titanic]
-project4 | [Apriori]
-project5 | [KerasR]
+project3 | [Titanic]()
+project4 | [Apriori]()
+project5 | [KerasR]()
 final project | [綜藝大熱門](https://b03602023.github.io/1062CSX_project/final_project/ppt/final_project.pdf)
+
+
 
 ------------------
 
+## [gitbook](https://pecu.gitbooks.io/r_/content/)
+
+## [github](https://github.com/NTU-CSX-DataScience/106-2RSampleCode)
+
+--------
 ## week 1
 * Learn how to use Git & Github
 * Finish hw 1
 
 ## week 2
 * Learn markdown to edit the README.md 
+	[Rmarkdown cheatsheet](http://packetlife.net/media/library/16/Markdown.pdf)
 * Learn the structure of HTML
 * Learn using R to collect raw text by the "rvest" package
 * [Self-learning material](https://github.com/b03602023/1062CSX_project/tree/master/week_2)
@@ -67,6 +75,8 @@ Learning material
 
 ## week 6
 
+
+
 ## week 7
 * Learn how to use the linear regression and svm for prediction
 
@@ -89,7 +99,7 @@ Apriori 關係演算法
 Apriori_project 4
 
 
-## 
+## week 12
 
 
 ## final project
