@@ -8,7 +8,7 @@ project   |      content
 ---------------------------- | ---------------------------------
 project2 | Kaggle- santander custome satisfaction [code](https://rgmmmt4r.github.io/106-2_R_b04303117/project2/kaggle_group6_01copy.html)
 
-Kaggle- santander custome satisfaction [presentation PPT](https://b03602023.github.io/1062CSX_project/project_2/presentation/Santander-Customer-Satisfaction.pdf)
+project2 | Kaggle- santander custome satisfaction [presentation PPT](https://b03602023.github.io/1062CSX_project/project_2/presentation/Santander-Customer-Satisfaction.pdf)
 
 project3 | [Titanic]
 
