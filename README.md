@@ -12,7 +12,7 @@ project2 | Kaggle- santander custome satisfaction [presentation PPT](https://b03
 project3 | [Titanic]
 project4 | [Apriori]
 project5 | [KerasR]
-final project | [綜藝大熱門](https://b03602023.github.io/1062CSX_project/final project/ppt/final_project.pdf)
+final project | [綜藝大熱門](https://b03602023.github.io/1062CSX_project/final_project/ppt/final_project.pdf)
 
 
 ## week 1
