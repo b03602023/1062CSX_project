@@ -24,7 +24,7 @@
 
 #### 資料視覺化
 
-    [目的](https://yijutseng.github.io/DataScienceRBook/vis.html#section-8.1)
+[目的](https://yijutseng.github.io/DataScienceRBook/vis.html#section-8.1)
     
     [R分析結果結合的視覺化](http://datascienceandr.org/slide/RVisualization-Introduction.html#3)
     
