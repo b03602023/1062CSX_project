@@ -20,11 +20,13 @@
 
 ### Reference
 
-    [上課PPT](https://docs.google.com/presentation/d/e/2PACX-1vRK_nZPbToZoI3Xw7p7i-9r4pRvJazoS68QmkNQeCVbj4lQvSOIK9exmYF5Ct7UdAQqj3EX0oMrCzRv/pub?start=false&loop=false&delayms=3000&slide=id.g34447a6361_0_20)
+[上課PPT](https://docs.google.com/presentation/d/e/2PACX-1vRK_nZPbToZoI3Xw7p7i-9r4pRvJazoS68QmkNQeCVbj4lQvSOIK9exmYF5Ct7UdAQqj3EX0oMrCzRv/pub?start=false&loop=false&delayms=3000&slide=id.g34447a6361_0_20)
 
 #### 資料視覺化
 
-[目的](https://yijutseng.github.io/DataScienceRBook/vis.html#section-8.1)
+study material
+
+    [目的](https://yijutseng.github.io/DataScienceRBook/vis.html#section-8.1)
     
     [R分析結果結合的視覺化](http://datascienceandr.org/slide/RVisualization-Introduction.html#3)
     

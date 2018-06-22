@@ -27,7 +27,7 @@ final project | [綜藝大熱門](https://b03602023.github.io/1062CSX_project/fi
 
     [result](https://b03602023.github.io/1062CSX_project/week_2/task_2/Task2_Rcrawler_PChome.html)
 
-## week 3
+## [week 3](https://docs.google.com/presentation/d/e/2PACX-1vRK_nZPbToZoI3Xw7p7i-9r4pRvJazoS68QmkNQeCVbj4lQvSOIK9exmYF5Ct7UdAQqj3EX0oMrCzRv/pub?start=false&loop=false&delayms=3000&slide=id.g34447a6361_0_20)
 * Learn the concept of ggplot, plotly and ggmap
 * Learn using R to collect the open data offered by the government (JSON)
 
@@ -42,7 +42,8 @@ final project | [綜藝大熱門](https://b03602023.github.io/1062CSX_project/fi
 ## [week 5](https://docs.google.com/presentation/d/e/2PACX-1vTsOaEG2FzFrqvz-3SN9Jnm-jv8oO3snK9oOQ87eMze1BbUjVyl_QhV80R0NEH9RrVpxjUMt5XPe44Q/pub?start=false&loop=false&delayms=3000&slide=id.g3713ce0adf_0_24)
 
 * Learn using leaflet package to create interactive maps [(used in task 3)]((https://b03602023.github.io/1062CSX_project/week_3/ggplot2practice.html))
-
+Learning material
+------------------
 * [EDA-Exploratory Data Analysis](https://pecu.gitbooks.io/r_/content/week5/1-exploratory-data-analysis.html)
 
 * [Text-mining: TF-IDF](https://pecu.gitbooks.io/r_/content/week5/2-text-mining-tf-idf-intro.html)
