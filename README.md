@@ -1,4 +1,4 @@
-# 1062CSX_project
+﻿# 1062CSX_project
 大家好~我的名字是沈祐珍
 希望可以透過資料科學程式設計更了解使用R語言和資料分析的方法!
 
@@ -39,9 +39,27 @@
 
 
 ## week 8
+SVM
+
+## week 9
+PCA & SVM
+
+
+## week 10
+統計回歸與ANOVA
+
+用回歸分析和ANOVA分析空氣品質[project 3]
+
+## week 11
+Apriori 關係演算法
+
+Apriori_project 4
+
+
+## 
 
 
 ## final project
-[final project](https://b03602023.github.io/1062CSX_project/final project/ppt/期末報告.pptx)
+[final project](https://b03602023.github.io/1062CSX_project/final%20project/ppt/期末報告.pptx)
 
 
