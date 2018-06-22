@@ -2,6 +2,14 @@
 大家好~我的名字是沈祐珍
 希望可以透過資料科學程式設計更了解使用R語言和資料分析的方法!
 
+## project 整理
+project2: 
+[Kaggle- santander custome satisfaction](https://rgmmmt4r.github.io/106-2_R_b04303117/project2/kaggle_group6_01copy.html)
+[PPT](https://b03602023.github.io/1062CSX_project/week_3/)
+project3: [Titanic]
+project4: [Apriori]
+project5: [KerasR]
+
 ## week 1
 * Learn how to use Git & Github
 * Finish hw 1
