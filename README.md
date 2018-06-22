@@ -14,6 +14,7 @@ project4 | [Apriori]
 project5 | [KerasR]
 final project | [綜藝大熱門](https://b03602023.github.io/1062CSX_project/final_project/ppt/final_project.pdf)
 
+------------------
 
 ## week 1
 * Learn how to use Git & Github
@@ -23,6 +24,7 @@ final project | [綜藝大熱門](https://b03602023.github.io/1062CSX_project/fi
 * Learn markdown to edit the README.md 
 * Learn the structure of HTML
 * Learn using R to collect raw text by the "rvest" package
+* [Self-learning material](https://github.com/b03602023/1062CSX_project/tree/master/week_2)
 * Parse PChome
 
     [result](https://b03602023.github.io/1062CSX_project/week_2/task_2/Task2_Rcrawler_PChome.html)
@@ -43,7 +45,7 @@ final project | [綜藝大熱門](https://b03602023.github.io/1062CSX_project/fi
 
 * Learn using leaflet package to create interactive maps [(used in task 3)]((https://b03602023.github.io/1062CSX_project/week_3/ggplot2practice.html))
 Learning material
-------------------
+
 * [EDA-Exploratory Data Analysis](https://pecu.gitbooks.io/r_/content/week5/1-exploratory-data-analysis.html)
 
 * [Text-mining: TF-IDF](https://pecu.gitbooks.io/r_/content/week5/2-text-mining-tf-idf-intro.html)
