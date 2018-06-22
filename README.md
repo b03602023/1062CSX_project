@@ -39,11 +39,28 @@ final project | [綜藝大熱門](https://b03602023.github.io/1062CSX_project/fi
 
     [result](https://b03602023.github.io/1062CSX_project/week_4/task_4/fb_API.html)
 
-## week 5
+## [week 5](https://docs.google.com/presentation/d/e/2PACX-1vTsOaEG2FzFrqvz-3SN9Jnm-jv8oO3snK9oOQ87eMze1BbUjVyl_QhV80R0NEH9RrVpxjUMt5XPe44Q/pub?start=false&loop=false&delayms=3000&slide=id.g3713ce0adf_0_24)
+
 * Learn using leaflet package to create interactive maps [(used in task 3)]((https://b03602023.github.io/1062CSX_project/week_3/ggplot2practice.html))
 
+* [EDA-Exploratory Data Analysis](https://pecu.gitbooks.io/r_/content/week5/1-exploratory-data-analysis.html)
+
+* [Text-mining: TF-IDF](https://pecu.gitbooks.io/r_/content/week5/2-text-mining-tf-idf-intro.html)
+
+* [Text Mining: word2vec](https://pecu.gitbooks.io/r_/content/week5/3-text-mining-word2vec-intro.html)
+
+
+* TF-IDF and visualization examples
+
+    [Text Mining: Word Relationships](https://uc-r.github.io/word_relationships)
+    
+    [Text mining with R: TF-IDF](https://www.tidytextmining.com/tfidf.html)
+
+    [Example of creating term document matrices with TF-IDF weights](https://rstudio-pubs-static.s3.amazonaws.com/118341_dacd8e7a963745eeacf25f96da52770e.html)
+
 * Use TF-IDF and wordcloud to analyze types of clothing styles from different online shopping website
-[Project_1](https://b03602023.github.io/1062CSX_project/week_5/project_1/project_1.html)
+
+    [Project_1](https://b03602023.github.io/1062CSX_project/week_5/project_1/project_1.html)
 
 ## week 6
 
@@ -75,4 +92,4 @@ Apriori_project 4
 ## final project
 [final project](https://b03602023.github.io/1062CSX_project/final%20project/ppt/期末報告.pptx)
 
-
+[wiki資料整理]
