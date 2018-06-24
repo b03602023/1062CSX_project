@@ -86,13 +86,13 @@ grid.arrange(b1,b2, nrow=1)
 b1 <- ggplot(data, aes(x = embarked, fill = embarked)) +
   geom_bar(stat='count', position='dodge') +
   geom_label(stat='count',aes(label=..count..), size=8) +
-  theme_grey(base_size = 15)
+  theme_grey(base_size = 10)
 
 b2 <-
   ggplot(data, aes(x = embarked, fill = survived)) +
   geom_bar(stat='count', position='dodge') +
   geom_label(stat='count',aes(label=..count..), size=8, position=position_dodge(0.9)) +
-  theme_grey(base_size = 15)
+  theme_grey(base_size = 10)
 grid.arrange(b1,b2, nrow=1)
 
 
@@ -212,10 +212,13 @@ ggplot(data, aes(x = fare, fill = survived)) +
 
 
 # sibsp的影響
-par(mfrow=c(1,2))
-boxplot(data$sibsp, range=2, main="sibsp")
-boxplot(data_sur$sibsp, col="red", main="survived sibsp")
-boxplot(data_un$sibsp, col="blue", main="unsurvived sibsp")
+data_sur <- data[data$survived==1, ]
+data_un <- data[data$survived==0, ]
+
+par(mfrow=c(1,3))
+boxplot(as.numeric(as.character(data$sibsp)), range=2, main="sibsp")
+boxplot(as.numeric(as.character(data_sur$sibsp)), col="red", main="survived sibsp")
+boxplot(as.numeric(as.character(data_un$sibsp)), col="blue", main="unsurvived sibsp")
 summary(data_sur$sibsp)
 summary(data_un$sibsp)
 table(data_sur$sibsp)/length(data_sur$sibsp)*100
@@ -224,7 +227,7 @@ table(data$sibsp)/length(data$sibsp)*100
 
 
 
-
+#----age and fare---------
 par(pch=19)
 plot(data$age, data$fare)
 points(data$age[data$survived==1], data$fare[data$survived==1], col="red") #活下
@@ -266,12 +269,9 @@ data$sex <- as.factor(data$sex)
 library(e1071)
 ?svm
 dataas <- subset(data, select=c(pclass,age,sibsp,parch,survived))
-dataa <- subset(dataa, select=c(pclass,age,sibsp,parch))
+dataa <- subset(data, select=c(pclass,age,sibsp,parch))
 model <- svm(survived ~ ., data = dataas)
 pred_result <- predict(model, dataa)
-table(pred_result, data$survived)    #無法成功因為age有139個NA
-
-plot(model, dataas, age ~ sibsp,
-     slice = list(age = 3, sibsp= 4),color.palette = terrain.colors)
-
+cm <- table(pred_result, data$survived)    #無法成功因為age有139個NA
+(cm[1]+cm[4])/sum(cm)*100   #accuracy
 
