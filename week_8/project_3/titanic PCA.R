@@ -140,13 +140,13 @@ grid.arrange(b1,b2,b3,b4, nrow=2)
 b1 <- ggplot(data, aes(x = parch, fill = parch)) +
   geom_bar(stat='count', position='dodge') +
   facet_grid(.~sex) +
-  geom_label(stat='count',aes(label=..count..), size=8) +
+  geom_label(stat='count',aes(label=..count..), size=3) +
   theme_grey(base_size = 15)
 
 b2 <-
   ggplot(data, aes(x = parch, fill = survived)) +
   geom_bar(stat='count', position='dodge') +
-  geom_label(stat='count',aes(label=..count..), size=8, position=position_dodge(0.9)) +
+  geom_label(stat='count',aes(label=..count..), size=3, position=position_dodge(0.9)) +
   facet_grid(.~sex) +
   theme_grey(base_size = 15)
 
@@ -235,7 +235,7 @@ points(data$age[data$survived==1 & data$sibsp!=0 & data$parch!=0],
        data$fare[data$survived==1 & data$sibsp!=0 & data$parch!=0], col="yellow")
 points(data$age[data$survived==1 & data$sibsp!=0 & data$parch!=0 & data$sex=="female"], data$fare[data$survived==1 & data$sibsp!=0 & data$parch!=0 & data$sex=="female"], 
        col="green")
-#legend("topright", legend=c("活下來",paste0("活下來","\n","有sibsp&parch"),"活下來+有sibsp&parch+女性"),col=c("red","yellow","green"),pch=19)
+legend("topright", legend=c("活下來",paste0("活下來","\n","有sibsp&parch"),paste0("活下來","\n","有sibsp&parch+女性")), col=c("red","yellow","green"),pch=19)
 
 
 #活下且有兄弟姊妹親人等等
